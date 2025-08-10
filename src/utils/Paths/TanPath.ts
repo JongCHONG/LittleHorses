@@ -1,4 +1,4 @@
-import type { BoardPosition } from './intefaces/boardPosition';
+import type { BoardPosition } from '../intefaces/boardPosition';
 
 export const TanCirclePositions: BoardPosition[] = [
   { x: 0, y: 400 },

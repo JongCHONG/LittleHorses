@@ -1,5 +1,6 @@
 import type { BoardPosition } from "../utils/intefaces/boardPosition";
 import BoardElement from "./BoardElement";
+import DashBoard from "./DashBoard";
 import Rules from "./Rules";
 
 interface BoardProps {
@@ -25,7 +26,7 @@ const Board = ({
 }: BoardProps) => {
   return (
     <div className="flex">
-      <Rules />
+      {/* <Rules /> */}
       <div
         style={{
           position: "relative",
@@ -55,6 +56,7 @@ const Board = ({
           name="prussianBlue"
         />
       </div>
+      <DashBoard />
     </div>
   );
 };

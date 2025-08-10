@@ -1,4 +1,4 @@
-import type { BoardPosition } from './intefaces/boardPosition';
+import type { BoardPosition } from '../intefaces/boardPosition';
 
 export const CambridgeBlueCirclePositions: BoardPosition[] = [
   { x: 800, y: 400 },

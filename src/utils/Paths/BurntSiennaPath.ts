@@ -1,4 +1,4 @@
-import type { BoardPosition } from './intefaces/boardPosition';
+import type { BoardPosition } from '../intefaces/boardPosition';
 
 export const BurntSiennaCirclePositions: BoardPosition[] = [
   { x: 400, y: 0 },

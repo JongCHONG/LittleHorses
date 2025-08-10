@@ -1,13 +1,13 @@
 import "./App.css";
 import Board from "./components/Board";
-import { TanCirclePositions } from "./utils/TanPath";
-import { TanEndZones } from "./utils/TanPath";
-import { BurntSiennaCirclePositions } from "./utils/BurntSiennaPath";
-import { BurntSiennaEndZones } from "./utils/BurntSiennaPath";
-import { CambridgeBlueCirclePositions } from "./utils/CambridgeBluePath";
-import { CambridgeBlueEndZones } from "./utils/CambridgeBluePath";
-import { PrussianBlueCirclePositions } from "./utils/PrussianBluePath";
-import { PrussianBlueEndZones } from "./utils/PrussianBluePath";
+import { TanCirclePositions } from "./utils/Paths/TanPath";
+import { TanEndZones } from "./utils/Paths/TanPath";
+import { BurntSiennaCirclePositions } from "./utils/Paths/BurntSiennaPath";
+import { BurntSiennaEndZones } from "./utils/Paths/BurntSiennaPath";
+import { CambridgeBlueCirclePositions } from "./utils/Paths/CambridgeBluePath";
+import { CambridgeBlueEndZones } from "./utils/Paths/CambridgeBluePath";
+import { PrussianBlueCirclePositions } from "./utils/Paths/PrussianBluePath";
+import { PrussianBlueEndZones } from "./utils/Paths/PrussianBluePath";
 
 function App() {
   return (

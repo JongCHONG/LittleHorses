@@ -7,7 +7,7 @@ interface CircleProps {
 const Circle = ({ color, x, y }: CircleProps) => {
   return (
     <div
-      className="absolute rounded-full border-2 border-white box-border w-[50px] h-[50px]"
+      className="absolute w-[50px] h-[50px] rounded-full border-2 border-white box-border"
       style={{
         left: x,
         top: y,

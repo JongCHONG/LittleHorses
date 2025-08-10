@@ -1,4 +1,6 @@
-export const CambridgeBlueCirclePositions = [
+import type { BoardPosition } from './intefaces/boardPosition';
+
+export const CambridgeBlueCirclePositions: BoardPosition[] = [
   { x: 800, y: 400 },
   { x: 800, y: 450 },
   { x: 750, y: 450 },
@@ -15,4 +17,14 @@ export const CambridgeBlueCirclePositions = [
   { x: 450, y: 700 },
   { x: 450, y: 750 },
   { x: 450, y: 800 },
+];
+
+export const CambridgeBlueEndZones: BoardPosition[] = [
+  { x: 750, y: 400 },
+  { x: 700, y: 400 },
+  { x: 650, y: 400 },
+  { x: 600, y: 400 },
+  { x: 550, y: 400 },
+  { x: 500, y: 400 },
+  { x: 450, y: 400 },
 ];

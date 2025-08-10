@@ -4,21 +4,16 @@ interface CircleProps {
   y: number;
 }
 
-  const Circle = ({ color, x, y }: CircleProps) => {
+const Circle = ({ color, x, y }: CircleProps) => {
   return (
-  <div
-    style={{
-      position: "absolute",
-      left: x,
-      top: y,
-      width: 50,      
-      height: 50,
-      backgroundColor: color,
-      borderRadius: "50%",
-      border: "2px solid #fff",
-      boxSizing: "border-box",
-    }}
-  />
+    <div
+      className="absolute rounded-full border-2 border-white box-border w-[50px] h-[50px]"
+      style={{
+        left: x,
+        top: y,
+        backgroundColor: color,
+      }}
+    />
   );
 };
 

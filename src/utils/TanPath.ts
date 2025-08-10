@@ -1,4 +1,6 @@
-export const TanCirclePositions = [
+import type { BoardPosition } from './intefaces/boardPosition';
+
+export const TanCirclePositions: BoardPosition[] = [
   { x: 0, y: 400 },
   { x: 0, y: 350 },
   { x: 50, y: 350 },
@@ -15,4 +17,14 @@ export const TanCirclePositions = [
   { x: 350, y: 100 },
   { x: 350, y: 50 },
   { x: 350, y: 0 },
+];
+
+export const TanEndZones: BoardPosition[] = [
+  { x: 50, y: 400 },
+  { x: 100, y: 400 },
+  { x: 150, y: 400 },
+  { x: 200, y: 400 },
+  { x: 250, y: 400 },
+  { x: 300, y: 400 },
+  { x: 350, y: 400 },
 ];

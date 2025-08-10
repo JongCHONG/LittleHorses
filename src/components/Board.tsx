@@ -1,83 +1,60 @@
-import React from "react";
-import Circle from "./Circle";
+import type { BoardPosition } from "../utils/intefaces/boardPosition";
+import BoardElement from "./BoardElement";
+import Rules from "./Rules";
+
+interface BoardProps {
+  tanCirclePositions: BoardPosition[];
+  tanEndZones: BoardPosition[];
+  burntSiennaCirclePositions: BoardPosition[];
+  burntSiennaEndZones: BoardPosition[];
+  cambridgeBlueCirclePositions: BoardPosition[];
+  cambridgeBlueEndZones: BoardPosition[];
+  prussianBlueCirclePositions: BoardPosition[];
+  prussianBlueEndZones: BoardPosition[];
+}
 
 const Board = ({
   tanCirclePositions,
+  tanEndZones,
   burntSiennaCirclePositions,
+  burntSiennaEndZones,
   cambridgeBlueCirclePositions,
+  cambridgeBlueEndZones,
   prussianBlueCirclePositions,
-}: any) => {
+  prussianBlueEndZones,
+}: BoardProps) => {
   return (
-    <div
-      style={{
-        position: "relative",
-        width: 850,
-        height: 850,
-        background: "#fafaf0",
-      }}
-    >
-      <div style={{ width: 350, height: 350, background: "#DAB785" }}>
-        <h2>Cercles Bleus</h2>
-      </div>
-      {tanCirclePositions.map(
-        (pos: { x: number; y: number }, i: React.Key | null | undefined) => (
-          <Circle key={i} color="#DAB785" x={pos.x} y={pos.y} />
-        )
-      )}
-
+    <div className="flex">
+      <Rules />
       <div
         style={{
-          width: 350,
-          height: 350,
-          background: "#C65D4D",
-          top: 0,
-          position: "absolute",
-          right: 0,
+          position: "relative",
+          width: 850,
+          height: 850,
+          background: "#fafaf0",
         }}
       >
-        <h2>Cercles Rouges</h2>
+        <BoardElement
+          circlePosition={tanCirclePositions}
+          endZonePosition={tanEndZones}
+          name="tan"
+        />
+        <BoardElement
+          circlePosition={burntSiennaCirclePositions}
+          endZonePosition={burntSiennaEndZones}
+          name="burntSienna"
+        />
+        <BoardElement
+          circlePosition={cambridgeBlueCirclePositions}
+          endZonePosition={cambridgeBlueEndZones}
+          name="cambridgeBlue"
+        />
+        <BoardElement
+          circlePosition={prussianBlueCirclePositions}
+          endZonePosition={prussianBlueEndZones}
+          name="prussianBlue"
+        />
       </div>
-      {burntSiennaCirclePositions.map(
-        (pos: { x: number; y: number }, i: React.Key | null | undefined) => (
-          <Circle key={i} color="#D5896F" x={pos.x} y={pos.y} />
-        )
-      )}
-
-      <div
-        style={{
-          width: 350,
-          height: 350,
-          background: "#70A288",
-          bottom: 0,
-          position: "absolute",
-          right: 0,
-        }}
-      >
-        <h2>Cercles Bleus</h2>
-      </div>
-      {cambridgeBlueCirclePositions.map(
-        (pos: { x: number; y: number }, i: React.Key | null | undefined) => (
-          <Circle key={i} color="#70A288" x={pos.x} y={pos.y} />
-        )
-      )}
-
-      <div
-        style={{
-          width: 350,
-          height: 350,
-          background: "#1969a1ff",
-          bottom: 0,
-          position: "absolute",
-          left: 0,
-        }}
-      >
-        <h2>Cercles Prussiens</h2>
-      </div>
-      {prussianBlueCirclePositions.map(
-        (pos: { x: number; y: number }, i: React.Key | null | undefined) => (
-          <Circle key={i} color="#1969a1ff" x={pos.x} y={pos.y} />
-        )
-      )}
     </div>
   );
 };

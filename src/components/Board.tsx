@@ -1,7 +1,7 @@
 import type { BoardPosition } from "../utils/intefaces/boardPosition";
 import BoardElement from "./BoardElement";
 import DashBoard from "./DashBoard";
-import Rules from "./Rules";
+// import Rules from "./Rules";
 
 interface BoardProps {
   tanCirclePositions: BoardPosition[];

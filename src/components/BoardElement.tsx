@@ -2,6 +2,7 @@ import React from "react";
 import EndZone from "./EndZone";
 import Circle from "./Circle";
 import type { BoardPosition } from "../utils/intefaces/boardPosition";
+import PlayerOnBoard from "./PlayerOnBoard";
 
 interface BoardElementProps {
   circlePosition: BoardPosition[];
@@ -76,6 +77,7 @@ const BoardElement = ({
           num={i + 1}
         />
       ))}
+      <PlayerOnBoard />
     </>
   );
 };

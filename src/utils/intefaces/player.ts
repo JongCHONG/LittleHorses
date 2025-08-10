@@ -2,7 +2,7 @@ import type { BoardPosition } from "./boardPosition";
 import type { Pawn } from "./pawn";
 
 export interface Player {
-  color?: "tan" | "burntSienna" | "cambridgeBlue" | "prussianBlue";
+  color?: "tan" | "burntSienna" | "cambridgeBlue" | "prussianBlue" | "none";
   pawns: Pawn[];
   name?: string;
   score?: number;

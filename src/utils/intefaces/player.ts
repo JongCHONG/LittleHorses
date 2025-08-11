@@ -1,4 +1,3 @@
-import type { BoardPosition } from "./boardPosition";
 import type { Pawn } from "./pawn";
 
 export interface Player {
@@ -7,5 +6,4 @@ export interface Player {
   name?: string;
   score?: number;
   canPlay?: boolean;
-  actualPosition?: BoardPosition;
 }

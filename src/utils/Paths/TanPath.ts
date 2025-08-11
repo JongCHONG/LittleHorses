@@ -28,3 +28,5 @@ export const TanEndZones: BoardPosition[] = [
   { x: 300, y: 400 },
   { x: 350, y: 400 },
 ];
+
+export const TanStartPosition: BoardPosition = { x: 0, y: 350 };

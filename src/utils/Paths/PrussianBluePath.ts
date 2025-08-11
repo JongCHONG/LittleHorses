@@ -1,7 +1,6 @@
 import type { BoardPosition } from '../intefaces/boardPosition';
 
 export const PrussianBlueCirclePositions: BoardPosition[] = [
-  { x: 400, y: 800 },
   { x: 350, y: 800 },
   { x: 350, y: 750 },
   { x: 350, y: 700 },
@@ -17,6 +16,7 @@ export const PrussianBlueCirclePositions: BoardPosition[] = [
   { x: 100, y: 450 },
   { x: 50, y: 450 },
   { x: 0, y: 450 },
+  { x: 400, y: 800 },
 ];
 
 export const PrussianBlueEndZones: BoardPosition[] = [

@@ -1,40 +1,29 @@
 import { createSlice, type PayloadAction } from "@reduxjs/toolkit";
 import type { Player } from "../intefaces/player";
 
-const initialState: Player = {
-  color: "none",
-  name: "",
-  score: 0,
-  pawns: [],
-  canPlay: false,
-  actualPosition: { x: 0, y: 0 },
-};
+// Le state devient un tableau de joueurs
+const initialState: Player[] = [];
 
 export const playerSlice = createSlice({
-  name: "player",
+  name: "players",
   initialState,
   reducers: {
-    setName: (state, action: PayloadAction<string>) => {
-      state.name = action.payload;
+    addPlayer: (state, action: PayloadAction<Player>) => {
+      state.push(action.payload);
     },
-    setColor: (
+    setPawnActualPosition: (
       state,
-      action: PayloadAction<
-        | "none"
-        | "tan"
-        | "burntSienna"
-        | "cambridgeBlue"
-        | "prussianBlue"
-        | undefined
-      >
+      action: PayloadAction<{
+        index: number;
+        position: { x: number; y: number };
+      }>
     ) => {
-      state.color = action.payload;
+      const { index, position } = action.payload;
+      if (state[index]) state[index].pawns[index].position = position;
     },
-    setActualPosition: (state, action: PayloadAction<{ x: number; y: number }>) => {
-      state.actualPosition = action.payload;
-    },
+    // Tu peux ajouter d'autres reducers ici
   },
 });
 
-export const { setName, setColor, setActualPosition } = playerSlice.actions;
+export const { addPlayer, setPawnActualPosition } = playerSlice.actions;
 export default playerSlice.reducer;

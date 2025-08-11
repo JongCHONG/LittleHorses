@@ -1,7 +1,6 @@
 import type { BoardPosition } from '../intefaces/boardPosition';
 
 export const BurntSiennaCirclePositions: BoardPosition[] = [
-  { x: 400, y: 0 },
   { x: 450, y: 0 },
   { x: 450, y: 50 },
   { x: 450, y: 100 },
@@ -17,6 +16,7 @@ export const BurntSiennaCirclePositions: BoardPosition[] = [
   { x: 700, y: 350 },
   { x: 750, y: 350 },
   { x: 800, y: 350 },
+  { x: 400, y: 0 },
 ];
 
 export const BurntSiennaEndZones: BoardPosition[] = [

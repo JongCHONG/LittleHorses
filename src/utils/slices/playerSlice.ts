@@ -1,7 +1,6 @@
 import { createSlice, type PayloadAction } from "@reduxjs/toolkit";
 import type { Player } from "../intefaces/player";
 
-// Le state devient un tableau de joueurs
 const initialState: Player[] = [];
 
 export const playerSlice = createSlice({
@@ -21,7 +20,6 @@ export const playerSlice = createSlice({
       const { index, position } = action.payload;
       if (state[index]) state[index].pawns[index].position = position;
     },
-    // Tu peux ajouter d'autres reducers ici
   },
 });
 

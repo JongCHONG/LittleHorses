@@ -1,13 +1,15 @@
-type NumberOfPlayersFormProps = {
+interface NumberOfPlayersFormProps {
   numPlayers: number;
   setNumPlayers: (num: number) => void;
   setShowNumPlayersForm: (show: boolean) => void;
-};
+  setShowPlayerForm: (show: boolean) => void;
+}
 
 const NumberOfPlayersForm = ({
   numPlayers,
   setNumPlayers,
-  setShowNumPlayersForm
+  setShowNumPlayersForm,
+  setShowPlayerForm
 }: NumberOfPlayersFormProps) => {
   return (
     <form
@@ -15,6 +17,7 @@ const NumberOfPlayersForm = ({
         e.preventDefault();
         if (numPlayers && numPlayers > 0) setNumPlayers(numPlayers);
         setShowNumPlayersForm(false);
+        setShowPlayerForm(true);
       }}
     >
       <label className="block mb-2">

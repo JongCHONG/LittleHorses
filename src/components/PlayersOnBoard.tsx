@@ -11,8 +11,8 @@ const PlayersOnBoard = () => {
       {players?.map((player) => (
         <div key={uuidv4()}>
           <PawnPosition
-            x={player.pawns[0]?.position?.x ?? 0}
-            y={player.pawns[0]?.position?.y ?? 0}
+            x={player.pawns?.[0]?.position?.x ?? 0}
+            y={player.pawns?.[0]?.position?.y ?? 0}
           />
         </div>
       ))}

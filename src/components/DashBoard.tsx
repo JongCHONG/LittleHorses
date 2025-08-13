@@ -1,21 +1,27 @@
-import { useCallback, useState } from "react";
+import { useState } from "react";
 import PlayerForm from "./PlayerForm";
 import NumberOfPlayersForm from "./NumberOfPlayersForm";
 import type { Player } from "../utils/intefaces/player";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  setPawnActualPosition,
+  updatePlayer,
+} from "../utils/slices/playerSlice";
+import { TanPath } from "../utils/Paths/TanPath";
 
 const DashBoard = () => {
+  const dispatch = useDispatch();
   const [diceRoll, setDiceRoll] = useState<number>(0);
-  const [showPlayerForm, setShowPlayerForm] = useState<boolean>(false);
   const [numPlayers, setNumPlayers] = useState<number | null>(null);
   const [showNumPlayersForm, setShowNumPlayersForm] = useState<boolean>(true);
   const players = useSelector((state: { players: Player[] }) => state.players);
+
   const currentPlayerIndex = useSelector(
     (state: { currentPlayer: { currentPlayerIndex: number } }) =>
       state.currentPlayer.currentPlayerIndex
   );
 
-  const handleRollDice = useCallback(() => {
+  const handleRollDice = () => {
     let intervalId: ReturnType<typeof setInterval>;
     let count = 0;
     intervalId = setInterval(() => {
@@ -23,15 +29,42 @@ const DashBoard = () => {
       count++;
       if (count > 10) {
         clearInterval(intervalId);
-        const finalRoll = 6; // ou rollDice();
+        const finalRoll = Math.floor(Math.random() * 6) + 1;
         setDiceRoll(finalRoll);
 
-        if (finalRoll === 6 && players.length < numPlayers!) {
-          setShowPlayerForm(true);
+        if (finalRoll === 6 && players[currentPlayerIndex].canPlay === false) {
+          dispatch(
+            updatePlayer({
+              id: currentPlayerIndex,
+              canPlay: true,
+            })
+          );
+        } else if (players[currentPlayerIndex].canPlay) {
+          console.log("hello");
+
+          const pawns = players[currentPlayerIndex].pawns;
+          if (pawns && pawns.length > 0) {
+            const currentPawnIndex = pawns[0]?.position?.id;
+            if (typeof currentPawnIndex === "number") {
+              const newIndex = currentPawnIndex + finalRoll;
+              console.log("currentPawnIndex:", currentPawnIndex);
+
+              if (newIndex < TanPath.length) {
+                dispatch(
+                  setPawnActualPosition({
+                    index: currentPlayerIndex,
+                    position: { ...TanPath[newIndex], id: newIndex },
+                  })
+                );
+              }
+            }
+          }
         }
       }
     }, 50);
-  }, [numPlayers, players.length]);
+  };
+
+  console.log(TanPath);
 
   return (
     <div className="p-5">
@@ -40,10 +73,9 @@ const DashBoard = () => {
           numPlayers={numPlayers ?? 0}
           setNumPlayers={setNumPlayers}
           setShowNumPlayersForm={setShowNumPlayersForm}
-          setShowPlayerForm={setShowPlayerForm}
         />
       ) : players.length < numPlayers! ? (
-        <PlayerForm handleFormClose={() => setShowPlayerForm(false)} />
+        <PlayerForm />
       ) : (
         <>
           <a

@@ -4,14 +4,13 @@ import { useDispatch } from "react-redux";
 import { addPlayer } from "../utils/slices/playerSlice";
 import { getStartPosition } from "../utils/helpers";
 
-interface PlayerFormProps {
-  handleFormClose: () => void;
-}
 
-const PlayerForm = ({ handleFormClose }: PlayerFormProps) => {
+
+const PlayerForm = () => {
   const dispatch = useDispatch();
 
   const [tempPlayer, setTempPlayer] = useState<Player>({
+    id: 0,
     color: "none",
     name: "",
     score: 0,
@@ -24,16 +23,22 @@ const PlayerForm = ({ handleFormClose }: PlayerFormProps) => {
     dispatch(
       addPlayer({
         ...tempPlayer,
-        canPlay: true,
+        canPlay: false,
         pawns: [
           {
-            position: getStartPosition(tempPlayer.color ?? "none"),
+            position: {
+              ...getStartPosition(tempPlayer.color ?? "none"),
+              id: 0,
+            },
             isFinished: false,
           },
         ],
       })
     );
-    handleFormClose();
+    setTempPlayer({
+      ...tempPlayer,
+      id: tempPlayer.id + 1,
+    });
   };
 
   return (

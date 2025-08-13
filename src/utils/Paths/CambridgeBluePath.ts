@@ -16,7 +16,6 @@ export const CambridgeBlueCirclePositions: BoardPosition[] = [
   { x: 450, y: 700 },
   { x: 450, y: 750 },
   { x: 450, y: 800 },
-  { x: 800, y: 400 },
 ];
 
 export const CambridgeBlueEndZones: BoardPosition[] = [
@@ -28,3 +27,5 @@ export const CambridgeBlueEndZones: BoardPosition[] = [
   { x: 500, y: 400 },
   { x: 450, y: 400 },
 ];
+
+export const CambridgeBlueLastCirclePosition: BoardPosition = { x: 800, y: 400 };

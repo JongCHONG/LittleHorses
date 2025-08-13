@@ -1,12 +1,12 @@
 import { useState } from "react";
 import PlayerForm from "./PlayerForm";
-import NumberOfPlayersForm from "./NumberOfPlayersForm";
+import NumberOfPlayersPawnsForm from "./NumberOfPlayersPawnsForm";
 import type { Player } from "../utils/intefaces/player";
 import { useDispatch, useSelector } from "react-redux";
 import {
   setPawnActualPosition,
   updatePlayer,
-} from "../utils/slices/playerSlice";
+} from "../utils/slices/playersSlice";
 import { TanPath } from "../utils/Paths/TanPath";
 
 const DashBoard = () => {
@@ -17,8 +17,8 @@ const DashBoard = () => {
   const players = useSelector((state: { players: Player[] }) => state.players);
 
   const currentPlayerIndex = useSelector(
-    (state: { currentPlayer: { currentPlayerIndex: number } }) =>
-      state.currentPlayer.currentPlayerIndex
+    (state: { current: { currentPlayerIndex: number } }) =>
+      state.current.currentPlayerIndex
   );
 
   const handleRollDice = () => {
@@ -32,28 +32,38 @@ const DashBoard = () => {
         const finalRoll = Math.floor(Math.random() * 6) + 1;
         setDiceRoll(finalRoll);
 
-        if (finalRoll === 6 && players[currentPlayerIndex].canPlay === false) {
+        if (finalRoll === 6 && players[currentPlayerIndex].isReady === false) {
           dispatch(
             updatePlayer({
               id: currentPlayerIndex,
-              canPlay: true,
+              isReady: true,
             })
           );
-        } else if (players[currentPlayerIndex].canPlay) {
-          console.log("hello");
-
+        } else if (players[currentPlayerIndex].isReady) {
           const pawns = players[currentPlayerIndex].pawns;
           if (pawns && pawns.length > 0) {
             const currentPawnIndex = pawns[0]?.position?.id;
             if (typeof currentPawnIndex === "number") {
               const newIndex = currentPawnIndex + finalRoll;
-              console.log("currentPawnIndex:", currentPawnIndex);
-
               if (newIndex < TanPath.length) {
                 dispatch(
                   setPawnActualPosition({
                     index: currentPlayerIndex,
                     position: { ...TanPath[newIndex], id: newIndex },
+                  })
+                );
+              } else {
+                dispatch(
+                  setPawnActualPosition({
+                    index: currentPlayerIndex,
+                    position: { x: 400, y: 400, id: 72 },
+                    isFinished: true,
+                  })
+                );
+                dispatch(
+                  updatePlayer({
+                    id: currentPlayerIndex,
+                    score: (players[currentPlayerIndex].score || 0) + 1,
                   })
                 );
               }
@@ -64,12 +74,18 @@ const DashBoard = () => {
     }, 50);
   };
 
-  console.log(TanPath);
-
+  
   return (
     <div className="p-5">
+      <h1 className="text-2xl font-bold mb-4">
+        {showNumPlayersForm
+          ? ""
+          : players.length < numPlayers!
+          ? "Player Registration"
+          : "Game Board"}
+      </h1>
       {showNumPlayersForm ? (
-        <NumberOfPlayersForm
+        <NumberOfPlayersPawnsForm
           numPlayers={numPlayers ?? 0}
           setNumPlayers={setNumPlayers}
           setShowNumPlayersForm={setShowNumPlayersForm}
@@ -77,16 +93,13 @@ const DashBoard = () => {
       ) : players.length < numPlayers! ? (
         <PlayerForm />
       ) : (
-        <>
-          <a
-            className="inline-block rounded-sm bg-indigo-600 px-8 py-3 text-sm font-medium text-white transition hover:scale-110 hover:-rotate-2 focus:ring-3 focus:outline-hidden"
-            href="#"
-            onClick={handleRollDice}
-          >
-            Roll Dice: {diceRoll}
-          </a>
-          <br /> <br />
-        </>
+        <a
+          className="inline-block rounded-sm bg-indigo-600 px-8 py-3 text-sm font-medium text-white transition hover:scale-110 hover:-rotate-2 focus:ring-3 focus:outline-hidden"
+          href="#"
+          onClick={handleRollDice}
+        >
+          Roll Dice: {diceRoll}
+        </a>
       )}
     </div>
   );

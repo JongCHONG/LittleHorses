@@ -6,5 +6,6 @@ export interface Player {
   pawns?: Pawn[];
   name?: string;
   score?: number;
-  canPlay?: boolean;
+  isReady?: boolean;
+  pawnName?: string;
 }

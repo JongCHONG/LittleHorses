@@ -1,25 +1,46 @@
 import "./App.css";
 import Board from "./components/Board";
-import { TanCirclePositions } from "./utils/Paths/TanPath";
+import {
+  TanCirclePositions,
+  TanLastCirclePosition,
+} from "./utils/Paths/TanPath";
 import { TanEndZones } from "./utils/Paths/TanPath";
-import { BurntSiennaCirclePositions } from "./utils/Paths/BurntSiennaPath";
+import {
+  BurntSiennaCirclePositions,
+  BurntSiennaLastCirclePosition,
+} from "./utils/Paths/BurntSiennaPath";
 import { BurntSiennaEndZones } from "./utils/Paths/BurntSiennaPath";
-import { CambridgeBlueCirclePositions } from "./utils/Paths/CambridgeBluePath";
+import {
+  CambridgeBlueCirclePositions,
+  CambridgeBlueLastCirclePosition,
+} from "./utils/Paths/CambridgeBluePath";
 import { CambridgeBlueEndZones } from "./utils/Paths/CambridgeBluePath";
-import { PrussianBlueCirclePositions } from "./utils/Paths/PrussianBluePath";
+import {
+  PrussianBlueCirclePositions,
+  PrussianBlueLastCirclePosition,
+} from "./utils/Paths/PrussianBluePath";
 import { PrussianBlueEndZones } from "./utils/Paths/PrussianBluePath";
 
 function App() {
   return (
     <>
       <Board
-        tanCirclePositions={TanCirclePositions}
+        tanCirclePositions={[...TanCirclePositions, TanLastCirclePosition]}
         tanEndZones={TanEndZones}
-        burntSiennaCirclePositions={BurntSiennaCirclePositions}
+        burntSiennaCirclePositions={[
+          ...BurntSiennaCirclePositions,
+          BurntSiennaLastCirclePosition,
+        ]}
         burntSiennaEndZones={BurntSiennaEndZones}
-        cambridgeBlueCirclePositions={CambridgeBlueCirclePositions}
+        cambridgeBlueCirclePositions={[
+          ...CambridgeBlueCirclePositions,
+          CambridgeBlueLastCirclePosition,
+        ]}
         cambridgeBlueEndZones={CambridgeBlueEndZones}
-        prussianBlueCirclePositions={PrussianBlueCirclePositions}
+        prussianBlueCirclePositions={[
+          ...PrussianBlueCirclePositions,
+          PrussianBlueLastCirclePosition,
+        ]}
         prussianBlueEndZones={PrussianBlueEndZones}
       />
     </>

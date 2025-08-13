@@ -23,15 +23,19 @@ export const playerSlice = createSlice({
       action: PayloadAction<{
         index: number;
         position: { x: number; y: number; id: number };
+        isFinished?: boolean;
       }>
     ) => {
-      const { index, position } = action.payload;
+      const { index, position, isFinished } = action.payload;
       if (state[index] && state[index].pawns && state[index].pawns[0]) {
         state[index].pawns[0].position = {
           x: position.x,
           y: position.y,
           id: position.id,
         };
+        if (isFinished) {
+          state[index].pawns[0].isFinished = isFinished;
+        }
       }
     },
   },

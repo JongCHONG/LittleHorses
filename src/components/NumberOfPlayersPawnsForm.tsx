@@ -1,30 +1,50 @@
+import { useState } from "react";
+import { useDispatch } from "react-redux";
+import { setNumOfPawns } from "../utils/slices/numOfPawnsSlice";
+
 interface NumberOfPlayersFormProps {
   numPlayers: number;
   setNumPlayers: (num: number) => void;
   setShowNumPlayersForm: (show: boolean) => void;
 }
 
-const NumberOfPlayersForm = ({
+const NumberOfPlayersPawnsForm = ({
   numPlayers,
   setNumPlayers,
   setShowNumPlayersForm,
 }: NumberOfPlayersFormProps) => {
+  const dispatch = useDispatch();
+  const [numPawns, setNumPawns] = useState<number | null>(0);
+
   return (
     <form
       onSubmit={(e) => {
         e.preventDefault();
         if (numPlayers && numPlayers > 0) setNumPlayers(numPlayers);
         setShowNumPlayersForm(false);
+        dispatch(setNumOfPawns(numPawns ?? 0));
       }}
     >
-      <label className="block mb-2">
-        Choisissez le nombre de joueurs :
+      <label className="block mb-2 text-[#031D44]">
+        Choose number of players (1-4):
         <input
           type="number"
           min={1}
           max={4}
           value={numPlayers ?? ""}
           onChange={(e) => setNumPlayers(Number(e.target.value))}
+          className="ml-2 border rounded px-2 py-1"
+          required
+        />
+      </label>
+      <label className="block mb-2 text-[#031D44]">
+        Choose number of pawns per player (1-4):
+        <input
+          type="number"
+          min={1}
+          max={4}
+          value={numPawns ?? ""}
+          onChange={(e) => setNumPawns(Number(e.target.value))}
           className="ml-2 border rounded px-2 py-1"
           required
         />
@@ -39,4 +59,4 @@ const NumberOfPlayersForm = ({
   );
 };
 
-export default NumberOfPlayersForm;
+export default NumberOfPlayersPawnsForm;

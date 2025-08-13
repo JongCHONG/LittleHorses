@@ -1,4 +1,3 @@
-import { getPlayerName } from "../utils/helpers";
 import type { BoardPosition } from "../utils/intefaces/boardPosition";
 import type { Player } from "../utils/intefaces/player";
 import BoardElement from "./BoardElement";
@@ -28,6 +27,10 @@ const Board = ({
   prussianBlueEndZones,
 }: BoardProps) => {
   const players = useSelector((state: { players: Player[] }) => state.players);
+  const tanPlayer = players.find((player) => player.color === "tan");
+  const burntSiennaPlayer = players.find((player) => player.color === "burntSienna");
+  const cambridgeBluePlayer = players.find((player) => player.color === "cambridgeBlue");
+  const prussianBluePlayer = players.find((player) => player.color === "prussianBlue");
 
   return (
     <div className="flex">
@@ -44,25 +47,25 @@ const Board = ({
           circlePosition={tanCirclePositions}
           endZonePosition={tanEndZones}
           name="tan"
-          playerName={getPlayerName("tan", players) ?? ""}
+          player={tanPlayer}
         />
         <BoardElement
           circlePosition={burntSiennaCirclePositions}
           endZonePosition={burntSiennaEndZones}
           name="burntSienna"
-          playerName={getPlayerName("burntSienna", players) ?? ""}
+          player={burntSiennaPlayer}
         />
         <BoardElement
           circlePosition={cambridgeBlueCirclePositions}
           endZonePosition={cambridgeBlueEndZones}
           name="cambridgeBlue"
-          playerName={getPlayerName("cambridgeBlue", players) ?? ""}
+          player={cambridgeBluePlayer}
         />
         <BoardElement
           circlePosition={prussianBlueCirclePositions}
           endZonePosition={prussianBlueEndZones}
           name="prussianBlue"
-          playerName={getPlayerName("prussianBlue", players) ?? ""}
+          player={prussianBluePlayer}
         />
       </div>
       <DashBoard />

@@ -1,15 +1,23 @@
 import React, { type CSSProperties } from "react";
+import { useSelector } from "react-redux";
+import { v4 as uuidv4 } from "uuid";
+import { TbRobot } from "react-icons/tb";
+import { TiPlaneOutline } from "react-icons/ti";
+import { FaCat } from "react-icons/fa";
+import { IoMdPlanet } from "react-icons/io";
+
 import EndZone from "./EndZone";
 import Circle from "./Circle";
-import type { BoardPosition } from "../utils/intefaces/boardPosition";
 import PlayerOnBoard from "./PlayersOnBoard";
-import { v4 as uuidv4 } from "uuid";
+
+import type { BoardPosition } from "../utils/intefaces/boardPosition";
+import type { Player } from "../utils/intefaces/player";
 
 interface BoardElementProps {
   circlePosition: BoardPosition[];
   endZonePosition: BoardPosition[];
   name: "tan" | "burntSienna" | "cambridgeBlue" | "prussianBlue";
-  playerName: string;
+  player: Player | undefined;
 }
 
 const cssStyles: {
@@ -49,11 +57,23 @@ const BoardElement = ({
   circlePosition,
   endZonePosition,
   name,
-  playerName,
+  player,
 }: BoardElementProps) => {
+  const TileNames = {
+    tan: "Tan",
+    burntSienna: "Burnt Sienna",
+    cambridgeBlue: "Cambridge Blue",
+    prussianBlue: "Prussian Blue",
+  };
+
+  const numOfPawns = useSelector(
+    (state: { numOfPawns: number }) => state.numOfPawns
+  );
+  
   return (
     <>
       <div
+        className="absolute flex flex-col items-center justify-center text-[whitesmoke]"
         style={{
           width: 350,
           height: 350,
@@ -65,8 +85,24 @@ const BoardElement = ({
           position: cssStyles[name].position as CSSProperties["position"],
         }}
       >
-        <h2>{name}</h2>
-        <p>Player: {playerName}</p>
+        <h2 className="mb-1">{TileNames[name]}</h2>
+        <p>Player : {player?.name}</p>
+        <p>Ready : {player?.isReady ? "Yes" : "No"}</p>
+        <p>Score : {player?.score || 0}</p>
+        <div className="flex gap-1 items-center">
+          Pawns :
+          {Array.from({ length: numOfPawns }).map((_, idx) =>
+            player?.pawnName === "Robot" ? (
+              <TbRobot key={idx} size={28} />
+            ) : player?.pawnName === "Plane" ? (
+              <TiPlaneOutline key={idx} size={28} />
+            ) : player?.pawnName === "Cat" ? (
+              <FaCat key={idx} size={28} />
+            ) : player?.pawnName === "Planet" ? (
+              <IoMdPlanet key={idx} size={28} />
+            ) : null
+          )}
+        </div>
       </div>
       {circlePosition.map(
         (pos: { x: number; y: number }, i: React.Key | null | undefined) => (

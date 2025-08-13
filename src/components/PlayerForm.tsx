@@ -1,10 +1,14 @@
 import { useState, type FormEvent } from "react";
-import type { Player } from "../utils/intefaces/player";
 import { useDispatch } from "react-redux";
-import { addPlayer } from "../utils/slices/playerSlice";
+
+import type { Player } from "../utils/intefaces/player";
+import { addPlayer } from "../utils/slices/playersSlice";
 import { getStartPosition } from "../utils/helpers";
 
-
+import { TbRobot } from "react-icons/tb";
+import { TiPlaneOutline } from "react-icons/ti";
+import { FaCat } from "react-icons/fa";
+import { IoMdPlanet } from "react-icons/io";
 
 const PlayerForm = () => {
   const dispatch = useDispatch();
@@ -15,7 +19,8 @@ const PlayerForm = () => {
     name: "",
     score: 0,
     pawns: [],
-    canPlay: false,
+    isReady: false,
+    pawnName: "",
   });
 
   const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
@@ -23,7 +28,7 @@ const PlayerForm = () => {
     dispatch(
       addPlayer({
         ...tempPlayer,
-        canPlay: false,
+        isReady: false,
         pawns: [
           {
             position: {
@@ -56,18 +61,12 @@ const PlayerForm = () => {
             className="peer mt-0.5 w-full rounded border-gray-300 shadow-sm sm:text-sm"
             required
           />
-          <span className="absolute inset-y-0 start-3 -translate-y-5 bg-white px-0.5 text-sm font-medium text-gray-700 transition-transform peer-placeholder-shown:translate-y-0 peer-focus:-translate-y-5">
+          <span className="absolute inset-y-0 start-3 -translate-y-5 bg-[#fafaf0] px-0.5 text-sm font-medium text-gray-700 transition-transform peer-placeholder-shown:translate-y-0 peer-focus:-translate-y-5">
             Name
           </span>
         </label>
       </div>
       <div className="mb-2">
-        <label
-          htmlFor="color"
-          className="block text-sm font-medium text-gray-700 mb-1"
-        >
-          Color
-        </label>
         <select
           id="color"
           value={tempPlayer.color}
@@ -89,11 +88,80 @@ const PlayerForm = () => {
           <option value="prussianBlue">prussianBlue</option>
         </select>
       </div>
+      <div className="mb-2 flex items-center gap-2">
+        <label htmlFor="pawnName" className="text-sm font-medium text-gray-700">
+          Choose your pawn :
+        </label>
+        <button
+          type="button"
+          onClick={() =>
+            setTempPlayer({
+              ...tempPlayer,
+              pawnName: tempPlayer.pawnName === "Robot" ? "" : "Robot",
+            })
+          }
+          className={`flex items-center px-2 py-1 rounded ${
+            tempPlayer.pawnName === "Robot"
+              ? "bg-indigo-200 border border-indigo-500"
+              : "bg-[#fafaf0]"
+          }`}
+        >
+          <TbRobot className="inline-block text-3xl" />
+        </button>
+        <button
+          type="button"
+          onClick={() =>
+            setTempPlayer({
+              ...tempPlayer,
+              pawnName: tempPlayer.pawnName === "Cat" ? "" : "Cat",
+            })
+          }
+          className={`flex items-center px-2 py-1 rounded ${
+            tempPlayer.pawnName === "Cat"
+              ? "bg-indigo-200 border border-indigo-500"
+              : "bg-[#fafaf0]"
+          }`}
+        >
+          <FaCat className="inline-block text-3xl" />
+        </button>
+        <button
+          type="button"
+          onClick={() =>
+            setTempPlayer({
+              ...tempPlayer,
+              pawnName: tempPlayer.pawnName === "Plane" ? "" : "Plane",
+            })
+          }
+          className={`flex items-center px-2 py-1 rounded ${
+            tempPlayer.pawnName === "Plane"
+              ? "bg-indigo-200 border border-indigo-500"
+              : "bg-[#fafaf0]"
+          }`}
+        >
+          <TiPlaneOutline className="inline-block text-3xl" />
+        </button>
+        <button
+          type="button"
+          onClick={() =>
+            setTempPlayer({
+              ...tempPlayer,
+              pawnName: tempPlayer.pawnName === "Planet" ? "" : "Planet",
+            })
+          }
+          className={`flex items-center px-2 py-1 rounded ${
+            tempPlayer.pawnName === "Planet"
+              ? "bg-indigo-200 border border-indigo-500"
+              : "bg-[#fafaf0]"
+          }`}
+        >
+          <IoMdPlanet className="inline-block text-3xl" />
+        </button>
+      </div>
       <button
         type="submit"
         className="inline-block rounded-sm bg-indigo-600 px-8 py-3 text-sm font-medium text-white transition hover:scale-110 hover:-rotate-2 focus:ring-3 focus:outline-hidden"
       >
-        Send
+        Register
       </button>
     </form>
   );

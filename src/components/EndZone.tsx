@@ -15,7 +15,7 @@ const EndZone = ({ color, x, y, num }: SquareProps) => {
         backgroundColor: color,
       }}
     >
-      <span style={{ color: "#031D44" }}>{num}</span>
+      <span className="text-[whitesmoke]">{num}</span>
     </div>
   );
 };

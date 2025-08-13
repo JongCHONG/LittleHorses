@@ -1,5 +1,13 @@
 @import "tailwindcss";
+@font-face {
+  font-family: 'AntonSCt';
+  src: url('./assets/AntonSC-Regular.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+}
 
 body {
   background-color: #fafaf0;
+  font-family: 'AntonSCt', sans-serif;
+  color: #031D44;
 }

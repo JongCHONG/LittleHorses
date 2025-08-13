@@ -40,8 +40,6 @@ export const TanEndZones: BoardPosition[] = [
   { x: 350, y: 400 },
 ];
 
-export const TanStartPosition: BoardPosition = { x: 0, y: 350 };
-
 export const TanLastCirclePosition: BoardPosition = { x: 0, y: 400 };
 
 export const TanPath = TanCirclePositions.map((pos, i) => ({

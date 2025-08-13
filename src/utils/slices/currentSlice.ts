@@ -8,8 +8,8 @@ const initialState: CurrentPlayerState = {
   currentPlayerIndex: 0,
 };
 
-const currentPlayerSlice = createSlice({
-  name: "currentPlayer",
+const currentSlice = createSlice({
+  name: "current",
   initialState,
   reducers: {
     setCurrentPlayerIndex(state, action: PayloadAction<number>) {
@@ -26,6 +26,6 @@ const currentPlayerSlice = createSlice({
 });
 
 export const { setCurrentPlayerIndex, nextPlayer, resetPlayerIndex } =
-  currentPlayerSlice.actions;
+  currentSlice.actions;
 
-export default currentPlayerSlice.reducer;
+export default currentSlice.reducer;

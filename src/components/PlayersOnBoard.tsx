@@ -13,6 +13,7 @@ const PlayersOnBoard = () => {
           <PawnPosition
             x={player.pawns?.[0]?.position?.x ?? 0}
             y={player.pawns?.[0]?.position?.y ?? 0}
+            pawnName={player?.pawnName ?? null}
           />
         </div>
       ))}

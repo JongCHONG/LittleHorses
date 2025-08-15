@@ -2,10 +2,12 @@ import { createSlice, type PayloadAction } from "@reduxjs/toolkit";
 
 interface CurrentPlayerState {
   currentPlayerIndex: number;
+  currentPawnIndexByPlayer: number;
 }
 
 const initialState: CurrentPlayerState = {
   currentPlayerIndex: 0,
+  currentPawnIndexByPlayer: 0,
 };
 
 const currentSlice = createSlice({
@@ -15,17 +17,18 @@ const currentSlice = createSlice({
     setCurrentPlayerIndex(state, action: PayloadAction<number>) {
       state.currentPlayerIndex = action.payload;
     },
-    nextPlayer(state, action: PayloadAction<number>) {
-      state.currentPlayerIndex =
-        (state.currentPlayerIndex + 1) % action.payload;
-    },
-    resetPlayerIndex(state) {
-      state.currentPlayerIndex = 0;
+    setCurrentPawnIndexByPlayer(
+      state,
+      action: PayloadAction<{ pawns: { isFinished?: boolean }[] }>
+    ) {
+      const { pawns } = action.payload;
+      const index = pawns.findIndex((pawn) => !pawn.isFinished);
+      state.currentPawnIndexByPlayer = index !== -1 ? index : 0;
     },
   },
 });
 
-export const { setCurrentPlayerIndex, nextPlayer, resetPlayerIndex } =
+export const { setCurrentPlayerIndex, setCurrentPawnIndexByPlayer } =
   currentSlice.actions;
 
 export default currentSlice.reducer;

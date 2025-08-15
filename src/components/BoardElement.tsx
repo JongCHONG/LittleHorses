@@ -66,10 +66,6 @@ const BoardElement = ({
     prussianBlue: "Prussian Blue",
   };
 
-  const numOfPawns = useSelector(
-    (state: { numOfPawns: number }) => state.numOfPawns
-  );
-  
   return (
     <>
       <div
@@ -86,23 +82,34 @@ const BoardElement = ({
         }}
       >
         <h2 className="mb-1">{TileNames[name]}</h2>
-        <p>Player : {player?.name}</p>
-        <p>Ready : {player?.isReady ? "Yes" : "No"}</p>
-        <p>Score : {player?.score || 0}</p>
-        <div className="flex gap-1 items-center">
-          Pawns :
-          {Array.from({ length: numOfPawns }).map((_, idx) =>
-            player?.pawnName === "Robot" ? (
-              <TbRobot key={idx} size={28} />
-            ) : player?.pawnName === "Plane" ? (
-              <TiPlaneOutline key={idx} size={28} />
-            ) : player?.pawnName === "Cat" ? (
-              <FaCat key={idx} size={28} />
-            ) : player?.pawnName === "Planet" ? (
-              <IoMdPlanet key={idx} size={28} />
-            ) : null
-          )}
-        </div>
+        {player && (
+          <>
+            <p>Player : {player?.name}</p>
+            <p>Ready : {player?.isReady ? "Yes" : "No"}</p>
+            <p>Score : {player?.score || 0}</p>
+            <div className="flex gap-1 items-center mt-2">
+              {player?.pawns?.filter((p) => !p.isFinished).length === 1
+                ? "Last pawn !"
+                : "Pawns :"}
+              {Array.from({
+                length: Math.max(
+                  (player?.pawns?.filter((p) => !p.isFinished).length ?? 0) - 1,
+                  0
+                ),
+              }).map((_, idx) =>
+                player?.pawnName === "Robot" ? (
+                  <TbRobot key={idx} size={28} />
+                ) : player?.pawnName === "Plane" ? (
+                  <TiPlaneOutline key={idx} size={28} />
+                ) : player?.pawnName === "Cat" ? (
+                  <FaCat key={idx} size={28} />
+                ) : player?.pawnName === "Planet" ? (
+                  <IoMdPlanet key={idx} size={28} />
+                ) : null
+              )}
+            </div>
+          </>
+        )}
       </div>
       {circlePosition.map(
         (pos: { x: number; y: number }, i: React.Key | null | undefined) => (

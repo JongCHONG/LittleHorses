@@ -1,9 +1,11 @@
-import type { BoardPosition } from "../utils/intefaces/boardPosition";
-import type { Player } from "../utils/intefaces/player";
+import { useSelector } from "react-redux";
+
 import BoardElement from "./BoardElement";
 import DashBoard from "./DashBoard";
 // import Rules from "./Rules";
-import { useSelector } from "react-redux";
+
+import type { BoardPosition } from "../utils/intefaces/boardPosition";
+import type { Player } from "../utils/intefaces/player";
 
 interface BoardProps {
   tanCirclePositions: BoardPosition[];

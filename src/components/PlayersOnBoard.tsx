@@ -5,14 +5,18 @@ import PawnPosition from "./PawnPosition";
 
 const PlayersOnBoard = () => {
   const players = useSelector((state: { players: Player[] }) => state.players);
+  const currentPawnIndex = useSelector(
+    (state: { current: { currentPawnIndexByPlayer: number } }) =>
+      state.current.currentPawnIndexByPlayer
+  );
 
   return (
     <>
       {players?.map((player) => (
         <div key={uuidv4()}>
           <PawnPosition
-            x={player.pawns?.[0]?.position?.x ?? 0}
-            y={player.pawns?.[0]?.position?.y ?? 0}
+            x={player.pawns?.[currentPawnIndex]?.position?.x ?? 0}
+            y={player.pawns?.[currentPawnIndex]?.position?.y ?? 0}
             pawnName={player?.pawnName ?? null}
           />
         </div>

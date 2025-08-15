@@ -1,17 +1,22 @@
 import { useState, type FormEvent } from "react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { createSelector } from "@reduxjs/toolkit";
 
 import type { Player } from "../utils/intefaces/player";
 import { addPlayer } from "../utils/slices/playersSlice";
 import { getStartPosition } from "../utils/helpers";
-
-import { TbRobot } from "react-icons/tb";
-import { TiPlaneOutline } from "react-icons/ti";
-import { FaCat } from "react-icons/fa";
-import { IoMdPlanet } from "react-icons/io";
+import PawnButton from "./PawnButton";
 
 const PlayerForm = () => {
   const dispatch = useDispatch();
+  const selectPlayers = (state: any) => state.players;
+  const selectTakenPawnNames = createSelector([selectPlayers], (players) =>
+    players.map((p: Player) => p.pawnName)
+  );
+  const takenPawnNames = useSelector(selectTakenPawnNames);
+  const numOfPawnsPerTeam = useSelector(
+    (state: { numOfPawnsPerTeam: number }) => state.numOfPawnsPerTeam
+  );
 
   const [tempPlayer, setTempPlayer] = useState<Player>({
     id: 0,
@@ -25,19 +30,18 @@ const PlayerForm = () => {
 
   const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    const pawns = Array.from({ length: numOfPawnsPerTeam }, (_, idx) => ({
+      position: {
+        ...getStartPosition(tempPlayer.color ?? "none"),
+        id: idx,
+      },
+      isFinished: false,
+    }));
     dispatch(
       addPlayer({
         ...tempPlayer,
         isReady: false,
-        pawns: [
-          {
-            position: {
-              ...getStartPosition(tempPlayer.color ?? "none"),
-              id: 0,
-            },
-            isFinished: false,
-          },
-        ],
+        pawns,
       })
     );
     setTempPlayer({
@@ -88,74 +92,34 @@ const PlayerForm = () => {
           <option value="prussianBlue">prussianBlue</option>
         </select>
       </div>
-      <div className="mb-2 flex items-center gap-2">
+      <div className="mb-5 flex items-center gap-2">
         <label htmlFor="pawnName" className="text-sm font-medium text-gray-700">
           Choose your pawn :
         </label>
-        <button
-          type="button"
-          onClick={() =>
-            setTempPlayer({
-              ...tempPlayer,
-              pawnName: tempPlayer.pawnName === "Robot" ? "" : "Robot",
-            })
-          }
-          className={`flex items-center px-2 py-1 rounded ${
-            tempPlayer.pawnName === "Robot"
-              ? "bg-indigo-200 border border-indigo-500"
-              : "bg-[#fafaf0]"
-          }`}
-        >
-          <TbRobot className="inline-block text-3xl" />
-        </button>
-        <button
-          type="button"
-          onClick={() =>
-            setTempPlayer({
-              ...tempPlayer,
-              pawnName: tempPlayer.pawnName === "Cat" ? "" : "Cat",
-            })
-          }
-          className={`flex items-center px-2 py-1 rounded ${
-            tempPlayer.pawnName === "Cat"
-              ? "bg-indigo-200 border border-indigo-500"
-              : "bg-[#fafaf0]"
-          }`}
-        >
-          <FaCat className="inline-block text-3xl" />
-        </button>
-        <button
-          type="button"
-          onClick={() =>
-            setTempPlayer({
-              ...tempPlayer,
-              pawnName: tempPlayer.pawnName === "Plane" ? "" : "Plane",
-            })
-          }
-          className={`flex items-center px-2 py-1 rounded ${
-            tempPlayer.pawnName === "Plane"
-              ? "bg-indigo-200 border border-indigo-500"
-              : "bg-[#fafaf0]"
-          }`}
-        >
-          <TiPlaneOutline className="inline-block text-3xl" />
-        </button>
-        <button
-          type="button"
-          onClick={() =>
-            setTempPlayer({
-              ...tempPlayer,
-              pawnName: tempPlayer.pawnName === "Planet" ? "" : "Planet",
-            })
-          }
-          className={`flex items-center px-2 py-1 rounded ${
-            tempPlayer.pawnName === "Planet"
-              ? "bg-indigo-200 border border-indigo-500"
-              : "bg-[#fafaf0]"
-          }`}
-        >
-          <IoMdPlanet className="inline-block text-3xl" />
-        </button>
+        <PawnButton
+          pawnName="Robot"
+          tempPlayer={tempPlayer}
+          setTempPlayer={setTempPlayer}
+          disabled={takenPawnNames.includes("Robot")}
+        />
+        <PawnButton
+          pawnName="Cat"
+          tempPlayer={tempPlayer}
+          setTempPlayer={setTempPlayer}
+          disabled={takenPawnNames.includes("Cat")}
+        />
+        <PawnButton
+          pawnName="Plane"
+          tempPlayer={tempPlayer}
+          setTempPlayer={setTempPlayer}
+          disabled={takenPawnNames.includes("Plane")}
+        />
+        <PawnButton
+          pawnName="Planet"
+          tempPlayer={tempPlayer}
+          setTempPlayer={setTempPlayer}
+          disabled={takenPawnNames.includes("Planet")}
+        />
       </div>
       <button
         type="submit"

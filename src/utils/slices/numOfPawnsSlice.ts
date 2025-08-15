@@ -3,7 +3,7 @@ import { createSlice, type PayloadAction } from '@reduxjs/toolkit';
 const initialState: number = 0;
 
 const numOfPawnsSlice = createSlice({
-  name: 'numOfPawns',
+  name: 'numOfPawnsPerTeam',
   initialState,
   reducers: {
     setNumOfPawns(_state, action: PayloadAction<number>) {

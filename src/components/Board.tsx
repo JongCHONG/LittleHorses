@@ -30,9 +30,15 @@ const Board = ({
 }: BoardProps) => {
   const players = useSelector((state: { players: Player[] }) => state.players);
   const tanPlayer = players.find((player) => player.color === "tan");
-  const burntSiennaPlayer = players.find((player) => player.color === "burntSienna");
-  const cambridgeBluePlayer = players.find((player) => player.color === "cambridgeBlue");
-  const prussianBluePlayer = players.find((player) => player.color === "prussianBlue");
+  const burntSiennaPlayer = players.find(
+    (player) => player.color === "burntSienna"
+  );
+  const cambridgeBluePlayer = players.find(
+    (player) => player.color === "cambridgeBlue"
+  );
+  const prussianBluePlayer = players.find(
+    (player) => player.color === "prussianBlue"
+  );
 
   return (
     <div className="flex">
@@ -70,6 +76,14 @@ const Board = ({
           player={prussianBluePlayer}
         />
       </div>
+      <div
+        className="absolute w-[50px] h-[50px] rounded-full border-2 border-white box-border"
+        style={{
+          left: 400,
+          top: 400,
+          backgroundColor: "gold",
+        }}
+      />
       <DashBoard />
     </div>
   );

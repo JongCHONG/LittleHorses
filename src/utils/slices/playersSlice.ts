@@ -28,13 +28,6 @@ export const playerSlice = createSlice({
       }>
     ) => {
       const { playerIndex, position, isFinished, pawnIndex } = action.payload;
-      console.log("Updating pawn position:", {
-        playerIndex,
-        pawnIndex,
-        position,
-        isFinished,
-      });
-
       if (
         state[playerIndex] &&
         state[playerIndex].pawns &&

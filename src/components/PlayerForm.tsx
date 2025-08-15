@@ -13,6 +13,9 @@ const PlayerForm = () => {
   const selectTakenPawnNames = createSelector([selectPlayers], (players) =>
     players.map((p: Player) => p.pawnName)
   );
+  const takenColors = useSelector((state: any) =>
+    state.players.map((p: Player) => p.color)
+  );
   const takenPawnNames = useSelector(selectTakenPawnNames);
   const numOfPawnsPerTeam = useSelector(
     (state: { numOfPawnsPerTeam: number }) => state.numOfPawnsPerTeam
@@ -45,8 +48,13 @@ const PlayerForm = () => {
       })
     );
     setTempPlayer({
-      ...tempPlayer,
       id: tempPlayer.id + 1,
+      color: "none",
+      name: "",
+      score: 0,
+      pawns: [],
+      isReady: false,
+      pawnName: "",
     });
   };
 
@@ -86,10 +94,27 @@ const PlayerForm = () => {
           <option value="none" disabled>
             Choose a color
           </option>
-          <option value="tan">tan</option>
-          <option value="burntSienna">burntSienna</option>
-          <option value="cambridgeBlue">cambridgeBlue</option>
-          <option value="prussianBlue">prussianBlue</option>
+          <option value="tan" disabled={takenColors.includes("tan")}>
+            tan
+          </option>
+          <option
+            value="burntSienna"
+            disabled={takenColors.includes("burntSienna")}
+          >
+            burntSienna
+          </option>
+          <option
+            value="cambridgeBlue"
+            disabled={takenColors.includes("cambridgeBlue")}
+          >
+            cambridgeBlue
+          </option>
+          <option
+            value="prussianBlue"
+            disabled={takenColors.includes("prussianBlue")}
+          >
+            prussianBlue
+          </option>
         </select>
       </div>
       <div className="mb-5 flex items-center gap-2">

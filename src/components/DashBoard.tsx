@@ -38,6 +38,9 @@ const DashBoard = () => {
         })
       );
     }
+    if (!currentPlayer?.isReady) {
+      setMessage("You need to roll a 6 to start moving your pawn.");
+    }
   }, [currentPlayer?.pawns, dispatch]);
 
   const handleRollDice = () => {
@@ -51,7 +54,8 @@ const DashBoard = () => {
       count++;
       if (count > 10) {
         clearInterval(intervalId);
-        const finalRoll = Math.floor(Math.random() * 6) + 1;
+        // const finalRoll = Math.floor(Math.random() * 6) + 1;
+        const finalRoll = 6;
         setDiceRoll(finalRoll);
 
         if (finalRoll === 6 && currentPlayer.isReady === false) {
@@ -85,10 +89,19 @@ const DashBoard = () => {
                     isFinished: true,
                   })
                 );
+                const newScore = (currentPlayer.score || 0) + 1;
+                if (newScore === currentPlayer?.pawns?.length) {
+                  setMessage(
+                    `Congratulations ${currentPlayer.name}, you won the game!`
+                  );
+                } else {
+                  setMessage("You reached the end! Your pawn is finished.");
+                }
+
                 dispatch(
                   updatePlayer({
                     id: currentPlayerIndex,
-                    score: (currentPlayer.score || 0) + 1,
+                    score: newScore,
                   })
                 );
               }

@@ -3,9 +3,12 @@ interface SquareProps {
   x: number;
   y: number;
   num: number;
+  pawnPositions?: { x: number; y: number }[];
 }
 
-const EndZone = ({ color, x, y, num }: SquareProps) => {
+const EndZone = ({ color, x, y, num, pawnPositions = [] }: SquareProps) => {
+  const isPawnHere = pawnPositions.some((pos) => pos.x === x && pos.y === y);
+
   return (
     <div
       className="absolute w-[50px] h-[50px] border-2 border-white flex items-center justify-center box-border"
@@ -15,7 +18,7 @@ const EndZone = ({ color, x, y, num }: SquareProps) => {
         backgroundColor: color,
       }}
     >
-      <span className="text-[whitesmoke]">{num}</span>
+      {!isPawnHere && <span className="text-[whitesmoke]">{num}</span>}
     </div>
   );
 };

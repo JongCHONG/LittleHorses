@@ -1,5 +1,4 @@
 import React, { type CSSProperties } from "react";
-import { useSelector } from "react-redux";
 import { v4 as uuidv4 } from "uuid";
 import { TbRobot } from "react-icons/tb";
 import { TiPlaneOutline } from "react-icons/ti";
@@ -66,6 +65,8 @@ const BoardElement = ({
     prussianBlue: "Prussian Blue",
   };
 
+  const numOfPawns = player?.pawns?.length ?? 0;
+
   return (
     <>
       <div
@@ -88,7 +89,9 @@ const BoardElement = ({
             <p>Ready : {player?.isReady ? "Yes" : "No"}</p>
             <p>Score : {player?.score || 0}</p>
             <div className="flex gap-1 items-center mt-2">
-              {player?.pawns?.filter((p) => !p.isFinished).length === 1
+              {player?.score === numOfPawns
+                ? "Winner!"
+                : player?.pawns?.filter((p) => !p.isFinished).length === 1
                 ? "Last pawn !"
                 : "Pawns :"}
               {Array.from({
@@ -123,6 +126,15 @@ const BoardElement = ({
           x={pos.x}
           y={pos.y}
           num={i + 1}
+          pawnPositions={
+            player?.pawns
+              ?.map((p) => p.position)
+              ?.filter(
+                (pos): pos is { x: number; y: number; id: number } =>
+                  pos !== null
+              )
+              ?.map(({ x, y }) => ({ x, y })) ?? []
+          }
         />
       ))}
       <PlayerOnBoard />

@@ -1,4 +1,4 @@
-import { useState, type FormEvent } from "react";
+import { useState, type FormEvent, useCallback } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { createSelector } from "@reduxjs/toolkit";
 
@@ -6,13 +6,20 @@ import type { Player } from "../utils/intefaces/player";
 import { addPlayer } from "../utils/slices/playersSlice";
 import { getStartPosition } from "../utils/helpers";
 import PawnButton from "./PawnButton";
+import CustomSelect from "./CustomSelect";
 
-const PlayerForm = () => {
+interface PlayerFormProps {
+  numPlayers: number;
+  handleReset?: () => void;
+}
+
+const PlayerForm = ({ numPlayers, handleReset }: PlayerFormProps) => {
   const dispatch = useDispatch();
   const selectPlayers = (state: any) => state.players;
   const selectTakenPawnNames = createSelector([selectPlayers], (players) =>
     players.map((p: Player) => p.pawnName)
   );
+  const players = useSelector((state: any) => state.players);
   const takenColors = useSelector((state: any) =>
     state.players.map((p: Player) => p.color)
   );
@@ -31,136 +38,137 @@ const PlayerForm = () => {
     pawnName: "",
   });
 
-  const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    const pawns = Array.from({ length: numOfPawnsPerTeam }, (_, idx) => ({
-      lastPosition: null,
-      actualPosition: {
-        ...getStartPosition(tempPlayer.color ?? "none"),
-        id: idx,
-      },
-      isFinished: false,
-    }));
-    dispatch(
-      addPlayer({
-        ...tempPlayer,
+  const handleSubmit = useCallback(
+    (e: FormEvent<HTMLFormElement>) => {
+      e.preventDefault();
+      const pawns = Array.from({ length: numOfPawnsPerTeam }, (_, idx) => ({
+        lastPosition: null,
+        actualPosition: {
+          ...getStartPosition(tempPlayer.color ?? "none"),
+          id: idx,
+        },
+        isFinished: false,
+      }));
+      dispatch(
+        addPlayer({
+          ...tempPlayer,
+          isReady: false,
+          pawns,
+        })
+      );
+      setTempPlayer({
+        id: tempPlayer.id + 1,
+        color: "none",
+        name: "",
+        score: 0,
+        pawns: [],
         isReady: false,
-        pawns,
-      })
-    );
-    setTempPlayer({
-      id: tempPlayer.id + 1,
-      color: "none",
-      name: "",
-      score: 0,
-      pawns: [],
-      isReady: false,
-      pawnName: "",
-    });
-  };
+        pawnName: "",
+      });
+    },
+    [dispatch, tempPlayer, numOfPawnsPerTeam]
+  );
 
   return (
-    <form onSubmit={handleSubmit} className="mb-4">
-      <div className="mb-2">
-        <label htmlFor="name" className="relative block">
-          <input
-            type="text"
-            id="name"
-            value={tempPlayer.name}
-            onChange={(e) =>
-              setTempPlayer({ ...tempPlayer, name: e.target.value })
-            }
-            placeholder=""
-            className="peer mt-0.5 w-full rounded border-gray-300 shadow-sm sm:text-sm"
-            required
+    <div className="bg-white p-4 rounded shadow-md">
+      <h1 className="text-2xl font-bold mb-4">
+        {players.length < numPlayers!
+          ? `Register player ${players.length + 1}${
+              numPlayers! > 1 ? ` of ${numPlayers}` : ""
+            }`
+          : "Register Player"}
+      </h1>
+      <form onSubmit={handleSubmit} className="mb-4">
+        <div className="mb-2 mt-5">
+          <label htmlFor="name" className="relative block">
+            <input
+              type="text"
+              id="name"
+              value={tempPlayer.name}
+              onChange={(e) =>
+                setTempPlayer({ ...tempPlayer, name: e.target.value })
+              }
+              placeholder=" "
+              className="peer mt-0.5 w-full rounded border border-gray-300 shadow-sm sm:text-sm h-10 px-3"
+              required
+            />
+            <span
+              className={`
+              pointer-events-none
+              absolute left-3
+              bg-white
+              px-1
+              text-base
+              font-medium
+              text-gray-700
+              transition-all
+              duration-200
+              ease-in-out
+              ${
+                tempPlayer.name
+                  ? "-top-3 text-xs"
+                  : "top-2 peer-placeholder-shown:top-2 peer-placeholder-shown:text-base"
+              }
+              peer-focus:-top-3 peer-focus:text-xs
+              `}
+            >
+              Name
+            </span>
+          </label>
+        </div>
+        <div className="mb-2">
+          <CustomSelect
+            tempPlayer={tempPlayer}
+            setTempPlayer={setTempPlayer}
+            takenColors={takenColors}
           />
-          <span className="absolute inset-y-0 start-3 -translate-y-5 bg-[#fafaf0] px-0.5 text-sm font-medium text-gray-700 transition-transform peer-placeholder-shown:translate-y-0 peer-focus:-translate-y-5">
-            Name
-          </span>
-        </label>
-      </div>
-      <div className="mb-2">
-        <select
-          id="color"
-          value={tempPlayer.color}
-          onChange={(e) =>
-            setTempPlayer({
-              ...tempPlayer,
-              color: e.target.value as Player["color"],
-            })
-          }
-          className="w-full rounded border-gray-300 shadow-sm sm:text-sm"
-          required
+        </div>
+        <div className="mb-5 flex items-center gap-2">
+          <label
+            htmlFor="pawnName"
+            className="text-sm font-medium text-gray-700"
+          >
+            Choose your pawn :
+          </label>
+          <PawnButton
+            pawnName="Robot"
+            tempPlayer={tempPlayer}
+            setTempPlayer={setTempPlayer}
+            disabled={takenPawnNames.includes("Robot")}
+          />
+          <PawnButton
+            pawnName="Cat"
+            tempPlayer={tempPlayer}
+            setTempPlayer={setTempPlayer}
+            disabled={takenPawnNames.includes("Cat")}
+          />
+          <PawnButton
+            pawnName="Plane"
+            tempPlayer={tempPlayer}
+            setTempPlayer={setTempPlayer}
+            disabled={takenPawnNames.includes("Plane")}
+          />
+          <PawnButton
+            pawnName="Planet"
+            tempPlayer={tempPlayer}
+            setTempPlayer={setTempPlayer}
+            disabled={takenPawnNames.includes("Planet")}
+          />
+        </div>
+        <button
+          type="submit"
+          className="inline-block rounded-sm bg-indigo-600 px-8 py-3 text-sm font-medium text-white transition hover:scale-110 hover:-rotate-2 focus:ring-3 focus:outline-hidden"
         >
-          <option value="none" disabled>
-            Choose a color
-          </option>
-          <option
-            value="tan"
-            disabled={takenColors.includes("tan")}
-            style={{ color: "#DAB785" }}
-          >
-            tan
-          </option>
-          <option
-            value="burntSienna"
-            disabled={takenColors.includes("burntSienna")}
-            style={{ color: "#C65D4D" }}
-          >
-            burntSienna
-          </option>
-          <option
-            value="cambridgeBlue"
-            disabled={takenColors.includes("cambridgeBlue")}
-            style={{ color: "#70A288" }}
-          >
-            cambridgeBlue
-          </option>
-          <option
-            value="prussianBlue"
-            disabled={takenColors.includes("prussianBlue")}
-            style={{ color: "#1969a1ff" }}
-          >
-            prussianBlue
-          </option>
-        </select>
-      </div>
-      <div className="mb-5 flex items-center gap-2">
-        <label htmlFor="pawnName" className="text-sm font-medium text-gray-700">
-          Choose your pawn :
-        </label>
-        <PawnButton
-          pawnName="Robot"
-          tempPlayer={tempPlayer}
-          setTempPlayer={setTempPlayer}
-          disabled={takenPawnNames.includes("Robot")}
-        />
-        <PawnButton
-          pawnName="Cat"
-          tempPlayer={tempPlayer}
-          setTempPlayer={setTempPlayer}
-          disabled={takenPawnNames.includes("Cat")}
-        />
-        <PawnButton
-          pawnName="Plane"
-          tempPlayer={tempPlayer}
-          setTempPlayer={setTempPlayer}
-          disabled={takenPawnNames.includes("Plane")}
-        />
-        <PawnButton
-          pawnName="Planet"
-          tempPlayer={tempPlayer}
-          setTempPlayer={setTempPlayer}
-          disabled={takenPawnNames.includes("Planet")}
-        />
-      </div>
-      <button
-        type="submit"
-        className="inline-block rounded-sm bg-indigo-600 px-8 py-3 text-sm font-medium text-white transition hover:scale-110 hover:-rotate-2 focus:ring-3 focus:outline-hidden"
-      >
-        Register
-      </button>
-    </form>
+          Register
+        </button>
+        <button
+          className="ml-4 inline-block rounded-sm bg-red-800 px-6 py-2 text-sm font-medium text-white transition hover:scale-105 focus:ring-2 focus:outline-none"
+          onClick={handleReset}
+        >
+          Restart
+        </button>
+      </form>
+    </div>
   );
 };
 

@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
 import PlayerForm from "./PlayerForm";
@@ -115,15 +115,16 @@ const DashBoard = () => {
     }, 50);
   };
 
+  const resetGame = useCallback(() => {
+    setDiceRoll(0);
+    setMessage("");
+    setNumPlayers(null);
+    setShowNumPlayersForm(true);
+    dispatch({ type: "RESET_GAME" });
+  }, [dispatch]);
+
   return (
     <div className="p-5">
-      <h1 className="text-2xl font-bold mb-4">
-        {showNumPlayersForm
-          ? ""
-          : players.length < numPlayers!
-          ? "Player Registration"
-          : "Game Board"}
-      </h1>
       {showNumPlayersForm ? (
         <NumberOfPlayersPawnsForm
           numPlayers={numPlayers ?? 0}
@@ -131,9 +132,10 @@ const DashBoard = () => {
           setShowNumPlayersForm={setShowNumPlayersForm}
         />
       ) : players.length < numPlayers! ? (
-        <PlayerForm />
+        <PlayerForm numPlayers={numPlayers!} handleReset={resetGame} />
       ) : (
-        <>
+        <div className="bg-white p-4 rounded shadow-md">
+          <h1 className="text-2xl font-bold mb-4">Game Board</h1>
           <a
             className="inline-block rounded-sm bg-indigo-600 px-8 py-3 text-sm font-medium text-white transition hover:scale-110 hover:-rotate-2 focus:ring-3 focus:outline-hidden"
             href="#"
@@ -143,18 +145,12 @@ const DashBoard = () => {
           </a>
           <button
             className="ml-4 inline-block rounded-sm bg-red-800 px-6 py-2 text-sm font-medium text-white transition hover:scale-105 focus:ring-2 focus:outline-none"
-            onClick={() => {
-              setDiceRoll(0);
-              setMessage("");
-              setNumPlayers(null);
-              setShowNumPlayersForm(true);
-              dispatch({ type: "RESET_GAME" });
-            }}
+            onClick={resetGame}
           >
             Restart
           </button>
           {message && <p className="text-red-500 mt-2">{message}</p>}
-        </>
+        </div>
       )}
     </div>
   );

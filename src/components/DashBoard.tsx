@@ -11,6 +11,7 @@ import {
 import type { Player } from "../utils/intefaces/player";
 import { setCurrentPawnIndexByPlayer } from "../utils/slices/currentSlice";
 import { getRoute } from "../utils/helpers";
+import PlayersOrderForm from "./PlayersOrderForm";
 
 const DashBoard = () => {
   const dispatch = useDispatch();
@@ -133,6 +134,8 @@ const DashBoard = () => {
         />
       ) : players.length < numPlayers! ? (
         <PlayerForm numPlayers={numPlayers!} handleReset={resetGame} />
+      ) : players.length === numPlayers ? (
+        <PlayersOrderForm />
       ) : (
         <div className="bg-white p-4 rounded shadow-md">
           <h1 className="text-2xl font-bold mb-4">Game Board</h1>

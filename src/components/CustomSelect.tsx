@@ -97,6 +97,10 @@ const CustomSelect = ({
               borderColor: "#000",
             },
           }),
+          placeholder: (provided) => ({
+            ...provided,
+            color: "#374151",
+          }),
         }}
         isSearchable={false}
       />

@@ -94,24 +94,31 @@ const PlayerForm = () => {
           <option value="none" disabled>
             Choose a color
           </option>
-          <option value="tan" disabled={takenColors.includes("tan")}>
+          <option
+            value="tan"
+            disabled={takenColors.includes("tan")}
+            style={{ color: "#DAB785" }}
+          >
             tan
           </option>
           <option
             value="burntSienna"
             disabled={takenColors.includes("burntSienna")}
+            style={{ color: "#C65D4D" }}
           >
             burntSienna
           </option>
           <option
             value="cambridgeBlue"
             disabled={takenColors.includes("cambridgeBlue")}
+            style={{ color: "#70A288" }}
           >
             cambridgeBlue
           </option>
           <option
             value="prussianBlue"
             disabled={takenColors.includes("prussianBlue")}
+            style={{ color: "#1969a1ff" }}
           >
             prussianBlue
           </option>

@@ -9,8 +9,8 @@ import {
   updatePlayer,
 } from "../utils/slices/playersSlice";
 import type { Player } from "../utils/intefaces/player";
-import { TanPath } from "../utils/Paths/TanPath";
 import { setCurrentPawnIndexByPlayer } from "../utils/slices/currentSlice";
+import { getRoute } from "../utils/helpers";
 
 const DashBoard = () => {
   const dispatch = useDispatch();
@@ -68,16 +68,19 @@ const DashBoard = () => {
           );
         } else if (currentPlayer.isReady) {
           const pawns = currentPlayer.pawns;
+          const currentRoute = currentPlayer.color
+            ? getRoute(currentPlayer.color)
+            : [];
           if (pawns && pawns.length > 0) {
             const pawnPositionId = pawns[currentPawnIndex]?.position?.id;
             if (typeof pawnPositionId === "number") {
               const newIndex = pawnPositionId + finalRoll;
-              if (newIndex < TanPath.length) {
+              if (newIndex < currentRoute.length) {
                 dispatch(
                   setPawnActualPosition({
                     playerIndex: currentPlayerIndex,
                     pawnIndex: currentPawnIndex,
-                    position: { ...TanPath[newIndex], id: newIndex },
+                    position: { ...currentRoute[newIndex], id: newIndex },
                   })
                 );
               } else {
@@ -138,6 +141,18 @@ const DashBoard = () => {
           >
             Roll Dice: {diceRoll}
           </a>
+          <button
+            className="ml-4 inline-block rounded-sm bg-red-800 px-6 py-2 text-sm font-medium text-white transition hover:scale-105 focus:ring-2 focus:outline-none"
+            onClick={() => {
+              setDiceRoll(0);
+              setMessage("");
+              setNumPlayers(null);
+              setShowNumPlayersForm(true);
+              dispatch({ type: "RESET_GAME" });
+            }}
+          >
+            Restart
+          </button>
           {message && <p className="text-red-500 mt-2">{message}</p>}
         </>
       )}

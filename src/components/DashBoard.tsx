@@ -72,7 +72,7 @@ const DashBoard = () => {
             ? getRoute(currentPlayer.color)
             : [];
           if (pawns && pawns.length > 0) {
-            const pawnPositionId = pawns[currentPawnIndex]?.position?.id;
+            const pawnPositionId = pawns[currentPawnIndex]?.actualPosition?.id;
             if (typeof pawnPositionId === "number") {
               const newIndex = pawnPositionId + finalRoll;
               if (newIndex < currentRoute.length) {

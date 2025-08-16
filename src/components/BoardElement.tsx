@@ -128,7 +128,7 @@ const BoardElement = ({
           num={i + 1}
           pawnPositions={
             player?.pawns
-              ?.map((p) => p.position)
+              ?.map((p) => p.actualPosition)
               ?.filter(
                 (pos): pos is { x: number; y: number; id: number } =>
                   pos !== null

@@ -33,7 +33,12 @@ export const playerSlice = createSlice({
         state[playerIndex].pawns &&
         state[playerIndex].pawns[pawnIndex]
       ) {
-        state[playerIndex].pawns[pawnIndex].position = {
+        state[playerIndex].pawns[pawnIndex].lastPosition = {
+          x: state[playerIndex].pawns[pawnIndex].actualPosition?.x ?? 0,
+          y: state[playerIndex].pawns[pawnIndex].actualPosition?.y ?? 0,
+          id: state[playerIndex].pawns[pawnIndex].actualPosition?.id ?? 0,
+        };
+        state[playerIndex].pawns[pawnIndex].actualPosition = {
           x: position.x,
           y: position.y,
           id: position.id,

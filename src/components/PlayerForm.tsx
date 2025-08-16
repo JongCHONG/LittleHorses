@@ -34,7 +34,8 @@ const PlayerForm = () => {
   const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const pawns = Array.from({ length: numOfPawnsPerTeam }, (_, idx) => ({
-      position: {
+      lastPosition: null,
+      actualPosition: {
         ...getStartPosition(tempPlayer.color ?? "none"),
         id: idx,
       },

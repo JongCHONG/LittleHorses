@@ -15,9 +15,11 @@ export const playerSlice = createSlice({
       //   (player) => player.id === action.payload.id
       // );
       // if (index !== -1) {
-        state[action.payload.id] = { ...state[action.payload.id], ...action.payload };
+      state[action.payload.id] = {
+        ...state[action.payload.id],
+        ...action.payload,
+      };
       // }
-      console.log("Updated player:", state[action.payload.id]);
     },
     setPawnActualPosition: (
       state,

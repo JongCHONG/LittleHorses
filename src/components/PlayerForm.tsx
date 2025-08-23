@@ -10,6 +10,7 @@ import CustomSelect from "./CustomSelect";
 import { setCurrentPlayerIndex } from "../utils/slices/currentSlice";
 
 interface PlayerFormProps {
+  numPlayers: number;
   handleReset?: () => void;
   onAllPlayersRegistered?: () => void;
 }
@@ -20,6 +21,7 @@ const selectTakenPawnNames = createSelector([selectPlayers], (players) =>
 );
 
 const PlayerForm = ({
+  numPlayers,
   handleReset,
   onAllPlayersRegistered,
 }: PlayerFormProps) => {
@@ -100,7 +102,9 @@ const PlayerForm = ({
 
   return (
     <div className="bg-white p-4 rounded shadow-md">
-      <h1 className="text-2xl font-bold mb-4">Players Registration</h1>
+      <h1 className="text-2xl font-bold mb-4">{`Players Registration (${
+        playersOrder.indexOf(currentPlayerIndex) + 1
+      }/${numPlayers})`}</h1>
       <form onSubmit={handleSubmit} className="mb-4">
         <div className="mb-2 mt-5">
           <label htmlFor="name" className="relative block">

@@ -151,6 +151,7 @@ const DashBoard = () => {
         <PlayersOrderForm onValidated={handlePlayersOrderValidated} />
       ) : showPlayerForm ? (
         <PlayerForm
+          numPlayers={numPlayers ?? 0}
           handleReset={resetGame}
           onAllPlayersRegistered={() => setShowPlayerForm(false)}
         />

@@ -11,12 +11,13 @@ export const playerSlice = createSlice({
       state.push(action.payload);
     },
     updatePlayer: (state, action: PayloadAction<Player>) => {
-      const index = state.findIndex(
-        (player) => player.id === action.payload.id
-      );
-      if (index !== -1) {
-        state[index] = { ...state[index], ...action.payload };
-      }
+      // const index = state.findIndex(
+      //   (player) => player.id === action.payload.id
+      // );
+      // if (index !== -1) {
+        state[action.payload.id] = { ...state[action.payload.id], ...action.payload };
+      // }
+      console.log("Updated player:", state[action.payload.id]);
     },
     setPawnActualPosition: (
       state,

@@ -1,21 +1,28 @@
 import { useState } from "react";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 
 import type { Player } from "../utils/intefaces/player";
+import { setCurrentPlayerIndex } from "../utils/slices/currentSlice";
+import { setPlayersOrder } from "../utils/slices/playersOrderSlice";
 
 type PlayerWithRoll = Player & { roll: number | null };
 
-const PlayersOrderForm = () => {
+interface PlayersOrderFormProps {
+  onValidated: () => void;
+}
+
+const PlayersOrderForm = ({ onValidated }: PlayersOrderFormProps) => {
+  const dispatch = useDispatch();
   const players = useSelector((state: { players: Player[] }) => state.players);
-  const [playersOrder, setPlayersOrder] = useState<PlayerWithRoll[]>(
+  const [tempPlayersOrder, setTempPlayersOrder] = useState<PlayerWithRoll[]>(
     players.map((p) => ({ ...p, roll: null }))
   );
-  const [currentPlayerIndex, setCurrentPlayerIndex] = useState(0);
+  const [tempCurrentPlayerIndex, setTempCurrentPlayerIndex] = useState(0);
   const [diceRoll, setDiceRoll] = useState<number>(0);
   const [message, setMessage] = useState<string>("");
 
   const handleRollDice = () => {
-    if (currentPlayerIndex >= playersOrder.length) {
+    if (tempCurrentPlayerIndex >= tempPlayersOrder.length) {
       setMessage("Tous les joueurs ont lancé le dé.");
       return;
     }
@@ -31,20 +38,23 @@ const PlayersOrderForm = () => {
         setDiceRoll(finalRoll);
 
         // Met à jour le score du joueur courant
-        setPlayersOrder((prev) => {
+        setTempPlayersOrder((prev) => {
           const updated = [...prev];
-          updated[currentPlayerIndex] = {
-            ...updated[currentPlayerIndex],
+          updated[tempCurrentPlayerIndex] = {
+            ...updated[tempCurrentPlayerIndex],
             roll: finalRoll,
           };
           // Trie si tous les joueurs ont lancé
-          if (currentPlayerIndex === updated.length - 1) {
+          if (tempCurrentPlayerIndex === updated.length - 1) {
             updated.sort((a, b) => (b.roll ?? 0) - (a.roll ?? 0));
+            dispatch(setPlayersOrder(updated.map((p) => p.id)));
+            dispatch(setCurrentPlayerIndex(updated[0].id));
+            onValidated();
           }
           return updated;
         });
 
-        setCurrentPlayerIndex((idx) => idx + 1);
+        setTempCurrentPlayerIndex((idx) => idx + 1);
       }
     }, 50);
   };
@@ -53,10 +63,10 @@ const PlayersOrderForm = () => {
     <div className="bg-white p-4 rounded shadow-md">
       <h1 className="text-2xl font-bold mb-4">Players Order</h1>
       <div className="mb-4">
-        {playersOrder.map((p, i) => (
+        {tempPlayersOrder.map((p, i) => (
           <div key={p.id}>
             {i + 1}. {p.name} {p.roll !== null ? `: ${p.roll}` : ""}
-            {currentPlayerIndex === i && <span> ← à lancer</span>}
+            {tempCurrentPlayerIndex === i && <span> ← à lancer</span>}
           </div>
         ))}
       </div>

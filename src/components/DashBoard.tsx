@@ -19,6 +19,8 @@ const DashBoard = () => {
   const [diceRoll, setDiceRoll] = useState<number>(0);
   const [numPlayers, setNumPlayers] = useState<number | null>(null);
   const [showNumPlayersForm, setShowNumPlayersForm] = useState<boolean>(true);
+  const [showPlayersOrderForm, setShowPlayersOrderForm] = useState(false);
+  const [showPlayerForm, setShowPlayerForm] = useState(false);
   const players = useSelector((state: { players: Player[] }) => state.players);
 
   const currentPlayerIndex = useSelector(
@@ -116,6 +118,19 @@ const DashBoard = () => {
     }, 50);
   };
 
+  // Après avoir choisi le nombre de joueurs :
+  const handleNumPlayersSubmit = (num: number) => {
+    setNumPlayers(num);
+    setShowNumPlayersForm(false);
+    setShowPlayersOrderForm(true);
+  };
+
+  // Quand l’ordre est validé dans PlayersOrderForm :
+  const handlePlayersOrderValidated = () => {
+    setShowPlayersOrderForm(false);
+    setShowPlayerForm(true);
+  };
+
   const resetGame = useCallback(() => {
     setDiceRoll(0);
     setMessage("");
@@ -130,12 +145,15 @@ const DashBoard = () => {
         <NumberOfPlayersPawnsForm
           numPlayers={numPlayers ?? 0}
           setNumPlayers={setNumPlayers}
-          setShowNumPlayersForm={setShowNumPlayersForm}
+          handleNumPlayersSubmit={handleNumPlayersSubmit}
         />
-      ) : players.length < numPlayers! ? (
-        <PlayerForm numPlayers={numPlayers!} handleReset={resetGame} />
-      ) : players.length === numPlayers ? (
-        <PlayersOrderForm />
+      ) : showPlayersOrderForm ? (
+        <PlayersOrderForm onValidated={handlePlayersOrderValidated} />
+      ) : showPlayerForm ? (
+        <PlayerForm
+          handleReset={resetGame}
+          onAllPlayersRegistered={() => setShowPlayerForm(false)}
+        />
       ) : (
         <div className="bg-white p-4 rounded shadow-md">
           <h1 className="text-2xl font-bold mb-4">Game Board</h1>

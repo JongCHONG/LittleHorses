@@ -1,20 +1,31 @@
 import { useState } from "react";
 import { useDispatch } from "react-redux";
 import { setNumOfPawns } from "../utils/slices/numOfPawnsSlice";
+import type { Player } from "../utils/intefaces/player";
+import { addPlayer } from "../utils/slices/playersSlice";
 
 interface NumberOfPlayersFormProps {
   numPlayers: number;
   setNumPlayers: (num: number) => void;
-  setShowNumPlayersForm: (show: boolean) => void;
+  handleNumPlayersSubmit: (num: number) => void;
 }
 
 const NumberOfPlayersPawnsForm = ({
   numPlayers,
   setNumPlayers,
-  setShowNumPlayersForm,
+  handleNumPlayersSubmit,
 }: NumberOfPlayersFormProps) => {
   const dispatch = useDispatch();
   const [numPawns, setNumPawns] = useState<number | null>(0);
+  const initialPlayer: Player = {
+    id: 0,
+    color: "none",
+    name: "",
+    score: 0,
+    pawns: [],
+    isReady: false,
+    pawnName: "",
+  };
 
   return (
     <div className="bg-white p-4 rounded shadow-md">
@@ -24,9 +35,11 @@ const NumberOfPlayersPawnsForm = ({
       <form
         onSubmit={(e) => {
           e.preventDefault();
-          if (numPlayers && numPlayers > 0) setNumPlayers(numPlayers);
-          setShowNumPlayersForm(false);
+          if (numPlayers && numPlayers > 0) handleNumPlayersSubmit(numPlayers);
           dispatch(setNumOfPawns(numPawns ?? 0));
+          for (let i = 0; i < numPlayers; i++) {
+            dispatch(addPlayer({ ...initialPlayer, id: i, name: `Player ${i + 1}` }));
+          }
         }}
       >
         <label className="block mb-2 text-[#031D44]">

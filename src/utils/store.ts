@@ -3,11 +3,13 @@ import { combineReducers, configureStore } from "@reduxjs/toolkit";
 import playersReducer from "./slices/playersSlice";
 import currentReducer from "./slices/currentSlice";
 import numOfPawnsReducer from "./slices/numOfPawnsSlice";
+import playersOrderReducer from "./slices/playersOrderSlice";
 
 const appReducer = combineReducers({
   players: playersReducer,
   current: currentReducer,
   numOfPawnsPerTeam: numOfPawnsReducer,
+  playersOrder: playersOrderReducer,
 });
 
 const rootReducer = (state: any, action: any) => {

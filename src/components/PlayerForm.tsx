@@ -3,23 +3,27 @@ import { useDispatch, useSelector } from "react-redux";
 import { createSelector } from "@reduxjs/toolkit";
 
 import type { Player } from "../utils/intefaces/player";
-import { addPlayer } from "../utils/slices/playersSlice";
+import { updatePlayer } from "../utils/slices/playersSlice";
 import { getStartPosition } from "../utils/helpers";
 import PawnButton from "./PawnButton";
 import CustomSelect from "./CustomSelect";
+import { setCurrentPlayerIndex } from "../utils/slices/currentSlice";
 
 interface PlayerFormProps {
-  numPlayers: number;
   handleReset?: () => void;
+  onAllPlayersRegistered?: () => void;
 }
 
-const PlayerForm = ({ numPlayers, handleReset }: PlayerFormProps) => {
+const selectPlayers = (state: any) => state.players;
+const selectTakenPawnNames = createSelector([selectPlayers], (players) =>
+  players.map((p: Player) => p.pawnName)
+);
+
+const PlayerForm = ({
+  handleReset,
+  onAllPlayersRegistered,
+}: PlayerFormProps) => {
   const dispatch = useDispatch();
-  const selectPlayers = (state: any) => state.players;
-  const selectTakenPawnNames = createSelector([selectPlayers], (players) =>
-    players.map((p: Player) => p.pawnName)
-  );
-  const players = useSelector((state: any) => state.players);
   const takenColors = useSelector((state: any) =>
     state.players.map((p: Player) => p.color)
   );
@@ -27,9 +31,17 @@ const PlayerForm = ({ numPlayers, handleReset }: PlayerFormProps) => {
   const numOfPawnsPerTeam = useSelector(
     (state: { numOfPawnsPerTeam: number }) => state.numOfPawnsPerTeam
   );
+  const playersOrder = useSelector(
+    (state: { playersOrder: number[] }) => state.playersOrder
+  );
+
+  const currentPlayerIndex = useSelector(
+    (state: { current: { currentPlayerIndex: number } }) =>
+      state.current.currentPlayerIndex
+  );
 
   const [tempPlayer, setTempPlayer] = useState<Player>({
-    id: 0,
+    id: currentPlayerIndex,
     color: "none",
     name: "",
     score: 0,
@@ -50,34 +62,45 @@ const PlayerForm = ({ numPlayers, handleReset }: PlayerFormProps) => {
         isFinished: false,
       }));
       dispatch(
-        addPlayer({
+        updatePlayer({
           ...tempPlayer,
-          isReady: false,
           pawns,
         })
       );
-      setTempPlayer({
-        id: tempPlayer.id + 1,
-        color: "none",
-        name: "",
-        score: 0,
-        pawns: [],
-        isReady: false,
-        pawnName: "",
-      });
+      const currentOrderIdx = playersOrder.indexOf(currentPlayerIndex);
+      const nextPlayerIndex =
+        currentOrderIdx !== -1 && currentOrderIdx < playersOrder.length - 1
+          ? playersOrder[currentOrderIdx + 1]
+          : 0;
+      if (currentOrderIdx !== -1 && currentOrderIdx < playersOrder.length - 1) {
+        dispatch(setCurrentPlayerIndex(nextPlayerIndex));
+        setTempPlayer({
+          id: nextPlayerIndex,
+          color: "none",
+          name: "",
+          score: 0,
+          pawns: [],
+          isReady: false,
+          pawnName: "",
+        });
+      } else {
+        if (onAllPlayersRegistered) onAllPlayersRegistered();
+        dispatch(setCurrentPlayerIndex(playersOrder[0]));
+      }
     },
-    [dispatch, tempPlayer, numOfPawnsPerTeam]
+    [
+      dispatch,
+      tempPlayer,
+      numOfPawnsPerTeam,
+      playersOrder,
+      currentPlayerIndex,
+      onAllPlayersRegistered,
+    ]
   );
 
   return (
     <div className="bg-white p-4 rounded shadow-md">
-      <h1 className="text-2xl font-bold mb-4">
-        {players.length < numPlayers!
-          ? `Register player ${players.length + 1}${
-              numPlayers! > 1 ? ` of ${numPlayers}` : ""
-            }`
-          : "Register Player"}
-      </h1>
+      <h1 className="text-2xl font-bold mb-4">Players Registration</h1>
       <form onSubmit={handleSubmit} className="mb-4">
         <div className="mb-2 mt-5">
           <label htmlFor="name" className="relative block">

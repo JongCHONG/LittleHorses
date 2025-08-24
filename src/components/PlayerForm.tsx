@@ -52,6 +52,11 @@ const PlayerForm = ({
     pawnName: "",
   });
 
+  const isFormValid =
+    tempPlayer.color !== "none" &&
+    tempPlayer.pawnName !== "" &&
+    (tempPlayer.name ?? "").trim() !== "";
+
   const handleSubmit = useCallback(
     (e: FormEvent<HTMLFormElement>) => {
       e.preventDefault();
@@ -183,13 +188,14 @@ const PlayerForm = ({
           />
         </div>
         <button
+          disabled={!isFormValid}
           type="submit"
-          className="inline-block rounded-sm bg-indigo-600 px-8 py-3 text-sm font-medium text-white transition hover:scale-110 hover:-rotate-2 focus:ring-3 focus:outline-hidden"
+          className="inline-block rounded-sm bg-indigo-600 px-8 py-3 text-sm font-medium text-white transition hover:scale-110 hover:-rotate-2 focus:ring-3 focus:outline-hidden cursor-pointer"
         >
           Register
         </button>
         <button
-          className="ml-4 inline-block rounded-sm bg-red-800 px-6 py-2 text-sm font-medium text-white transition hover:scale-105 focus:ring-2 focus:outline-none"
+          className="ml-4 inline-block rounded-sm bg-red-800 px-6 py-2 text-sm font-medium text-white transition hover:scale-105 focus:ring-2 focus:outline-none cursor-pointer"
           onClick={handleReset}
         >
           Restart

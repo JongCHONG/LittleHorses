@@ -9,9 +9,13 @@ type PlayerWithRoll = Player & { roll: number | null };
 
 interface PlayersOrderFormProps {
   onValidated: () => void;
+  handleReset: () => void;
 }
 
-const PlayersOrderForm = ({ onValidated }: PlayersOrderFormProps) => {
+const PlayersOrderForm = ({
+  onValidated,
+  handleReset,
+}: PlayersOrderFormProps) => {
   const dispatch = useDispatch();
   const players = useSelector((state: { players: Player[] }) => state.players);
   const [tempPlayersOrder, setTempPlayersOrder] = useState<PlayerWithRoll[]>(
@@ -19,13 +23,16 @@ const PlayersOrderForm = ({ onValidated }: PlayersOrderFormProps) => {
   );
   const [tempCurrentPlayerIndex, setTempCurrentPlayerIndex] = useState(0);
   const [diceRoll, setDiceRoll] = useState<number>(0);
+  const [isRolling, setIsRolling] = useState(false);
   const [message, setMessage] = useState<string>("");
 
   const handleRollDice = () => {
+    if (isRolling) return;
     if (tempCurrentPlayerIndex >= tempPlayersOrder.length) {
       setMessage("Tous les joueurs ont lancé le dé.");
       return;
     }
+    setIsRolling(true);
     setMessage("");
     let intervalId: ReturnType<typeof setInterval>;
     let count = 0;
@@ -37,14 +44,12 @@ const PlayersOrderForm = ({ onValidated }: PlayersOrderFormProps) => {
         const finalRoll = Math.floor(Math.random() * 6) + 1;
         setDiceRoll(finalRoll);
 
-        // Met à jour le score du joueur courant
         setTempPlayersOrder((prev) => {
           const updated = [...prev];
           updated[tempCurrentPlayerIndex] = {
             ...updated[tempCurrentPlayerIndex],
             roll: finalRoll,
           };
-          // Trie si tous les joueurs ont lancé
           if (tempCurrentPlayerIndex === updated.length - 1) {
             updated.sort((a, b) => (b.roll ?? 0) - (a.roll ?? 0));
             dispatch(setPlayersOrder(updated.map((p) => p.id)));
@@ -55,6 +60,7 @@ const PlayersOrderForm = ({ onValidated }: PlayersOrderFormProps) => {
         });
 
         setTempCurrentPlayerIndex((idx) => idx + 1);
+        setIsRolling(false);
       }
     }, 50);
   };
@@ -71,15 +77,16 @@ const PlayersOrderForm = ({ onValidated }: PlayersOrderFormProps) => {
         ))}
       </div>
       <a
-        className="inline-block rounded-sm bg-indigo-600 px-8 py-3 text-sm font-medium text-white transition hover:scale-110 hover:-rotate-2 focus:ring-3 focus:outline-hidden"
+        className="inline-block rounded-sm bg-indigo-600 px-8 py-3 text-sm font-medium text-white transition hover:scale-110 hover:-rotate-2 focus:ring-3 focus:outline-hidden cursor-pointer"
         href="#"
         onClick={handleRollDice}
       >
         Roll Dice: {diceRoll}
       </a>
       <button
-        className="ml-4 inline-block rounded-sm bg-red-800 px-6 py-2 text-sm font-medium text-white transition hover:scale-105 focus:ring-2 focus:outline-none"
-        // onClick={resetGame}
+        className="ml-4 inline-block rounded-sm bg-red-800 px-6 py-2 text-sm font-medium text-white transition hover:scale-105 focus:ring-2 focus:outline-none cursor-pointer"
+        onClick={handleReset}
+        disabled={isRolling}
       >
         Restart
       </button>

@@ -6,6 +6,10 @@ import { getRoute } from "../utils/helpers";
 
 const PlayersOnBoard = () => {
   const players = useSelector((state: { players: Player[] }) => state.players);
+  const currentPlayerIndex = useSelector(
+    (state: { current: { currentPlayerIndex: number } }) =>
+      state.current.currentPlayerIndex
+  );
   const currentPawnIndex = useSelector(
     (state: { current: { currentPawnIndexByPlayer: number } }) =>
       state.current.currentPawnIndexByPlayer
@@ -13,17 +17,27 @@ const PlayersOnBoard = () => {
 
   return (
     <>
-      {players?.map((player) =>
-        player.color ? (
-          <div key={uuidv4()}>
-            <PawnPosition
-              path={getRoute(player.color)}
-              fromIndex={player.pawns?.[currentPawnIndex]?.lastPosition?.id ?? 0}
-              toIndex={player.pawns?.[currentPawnIndex]?.actualPosition?.id ?? 0}
-              pawnName={player?.pawnName ?? ""}
-            />
-          </div>
-        ) : null
+      {players?.map((player, playerIdx) =>
+        player.color
+          ? player.pawns?.map((pawn, pawnIdx) => {
+              // Seul le pion courant du joueur courant est animé
+              const isAnimated =
+                playerIdx === currentPlayerIndex && pawnIdx === currentPawnIndex;
+              const fromIndex = isAnimated
+                ? pawn.lastPosition?.id ?? pawn.actualPosition?.id ?? 0
+                : pawn.actualPosition?.id ?? 0;
+              const toIndex = pawn.actualPosition?.id ?? 0;
+              return (
+                <PawnPosition
+                  key={uuidv4()}
+                  path={getRoute(player.color!)}
+                  fromIndex={fromIndex}
+                  toIndex={toIndex}
+                  pawnName={player?.pawnName ?? ""}
+                />
+              );
+            })
+          : null
       )}
     </>
   );

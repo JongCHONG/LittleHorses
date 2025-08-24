@@ -9,7 +9,10 @@ import {
   updatePlayer,
 } from "../utils/slices/playersSlice";
 import type { Player } from "../utils/intefaces/player";
-import { setCurrentPawnIndexByPlayer } from "../utils/slices/currentSlice";
+import {
+  setCurrentPawnIndexByPlayer,
+  setCurrentPlayerIndex,
+} from "../utils/slices/currentSlice";
 import { getRoute } from "../utils/helpers";
 import PlayersOrderForm from "./PlayersOrderForm";
 
@@ -32,6 +35,7 @@ const DashBoard = () => {
     (state: { current: { currentPawnIndexByPlayer: number } }) =>
       state.current.currentPawnIndexByPlayer
   );
+  const playersOrder = useSelector((state: any) => state.playersOrder);
 
   useEffect(() => {
     if (currentPlayer?.pawns && currentPlayer.pawns.length > 0) {
@@ -42,9 +46,11 @@ const DashBoard = () => {
       );
     }
     if (!currentPlayer?.isReady) {
-      setMessage("You need to roll a 6 to start moving your pawn.");
+      setMessage(
+        `You need to roll a 6 to start moving your pawn.`
+      );
     }
-  }, [currentPlayer?.pawns, dispatch]);
+  }, [currentPlayerIndex, currentPlayer?.pawns, dispatch]);
 
   const handleRollDice = () => {
     if (message) {
@@ -62,7 +68,9 @@ const DashBoard = () => {
         setDiceRoll(finalRoll);
 
         if (finalRoll === 6 && currentPlayer.isReady === false) {
-          setMessage("You rolled a 6! You can move your pawn.");
+          setMessage(
+            `You rolled a 6! \n You can move your pawn.`
+          );
           dispatch(
             updatePlayer({
               id: currentPlayerIndex,
@@ -79,6 +87,10 @@ const DashBoard = () => {
             if (typeof pawnPositionId === "number") {
               const newIndex = pawnPositionId + finalRoll;
               if (newIndex < currentRoute.length) {
+                setMessage(
+                  `${currentPlayer?.name} moves forward by ${finalRoll} spaces`
+                );
+
                 dispatch(
                   setPawnActualPosition({
                     playerIndex: currentPlayerIndex,
@@ -86,6 +98,15 @@ const DashBoard = () => {
                     position: { ...currentRoute[newIndex], id: newIndex },
                   })
                 );
+                const currentOrderIdx =
+                  playersOrder.indexOf(currentPlayerIndex);
+                const nextPlayerIndex =
+                  currentOrderIdx !== -1 &&
+                  currentOrderIdx < playersOrder.length - 1
+                    ? playersOrder[currentOrderIdx + 1]
+                    : playersOrder[0];
+
+                dispatch(setCurrentPlayerIndex(nextPlayerIndex));
               } else {
                 dispatch(
                   setPawnActualPosition({
@@ -148,7 +169,10 @@ const DashBoard = () => {
           handleNumPlayersSubmit={handleNumPlayersSubmit}
         />
       ) : showPlayersOrderForm ? (
-        <PlayersOrderForm onValidated={handlePlayersOrderValidated} />
+        <PlayersOrderForm
+          onValidated={handlePlayersOrderValidated}
+          handleReset={resetGame}
+        />
       ) : showPlayerForm ? (
         <PlayerForm
           numPlayers={numPlayers ?? 0}
@@ -157,16 +181,16 @@ const DashBoard = () => {
         />
       ) : (
         <div className="bg-white p-4 rounded shadow-md">
-          <h1 className="text-2xl font-bold mb-4">Game Board</h1>
+          <h1 className="text-2xl font-bold mb-4">{currentPlayer?.name}'s Turn</h1>
           <a
-            className="inline-block rounded-sm bg-indigo-600 px-8 py-3 text-sm font-medium text-white transition hover:scale-110 hover:-rotate-2 focus:ring-3 focus:outline-hidden"
+            className="inline-block rounded-sm bg-indigo-600 px-8 py-3 text-sm font-medium text-white transition hover:scale-110 hover:-rotate-2 focus:ring-3 focus:outline-hidden cursor-pointer"
             href="#"
             onClick={handleRollDice}
           >
             Roll Dice: {diceRoll}
           </a>
           <button
-            className="ml-4 inline-block rounded-sm bg-red-800 px-6 py-2 text-sm font-medium text-white transition hover:scale-105 focus:ring-2 focus:outline-none"
+            className="ml-4 inline-block rounded-sm bg-red-800 px-6 py-2 text-sm font-medium text-white transition hover:scale-105 focus:ring-2 focus:outline-none cursor-pointer"
             onClick={resetGame}
           >
             Restart

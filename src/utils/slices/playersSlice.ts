@@ -28,6 +28,7 @@ export const playerSlice = createSlice({
         pawnIndex: number;
         position: { x: number; y: number; id: number };
         isFinished?: boolean;
+        isOnBoard?: boolean;
       }>
     ) => {
       const { playerIndex, position, isFinished, pawnIndex } = action.payload;
@@ -49,6 +50,7 @@ export const playerSlice = createSlice({
         if (isFinished) {
           state[playerIndex].pawns[pawnIndex].isFinished = isFinished;
         }
+        state[playerIndex].pawns[pawnIndex].isOnBoard = true;
       }
     },
   },

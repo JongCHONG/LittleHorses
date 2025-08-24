@@ -67,6 +67,7 @@ const PlayerForm = ({
           id: idx,
         },
         isFinished: false,
+        isOnBoard: idx === 0,
       }));
       dispatch(
         updatePlayer({

@@ -13,8 +13,9 @@ import {
   setCurrentPawnIndexByPlayer,
   setCurrentPlayerIndex,
 } from "../utils/slices/currentSlice";
-import { getRoute } from "../utils/helpers";
+import { getRoute, getStartPosition } from "../utils/helpers";
 import PlayersOrderForm from "./PlayersOrderForm";
+import { colorMap } from "../utils/colorMap";
 
 const DashBoard = () => {
   const dispatch = useDispatch();
@@ -46,9 +47,7 @@ const DashBoard = () => {
       );
     }
     if (!currentPlayer?.isReady) {
-      setMessage(
-        `You need to roll a 6 to start moving your pawn.`
-      );
+      setMessage(`You need to roll a 6 to start moving your pawn.`);
     }
   }, [currentPlayerIndex, currentPlayer?.pawns, dispatch]);
 
@@ -68,9 +67,7 @@ const DashBoard = () => {
         setDiceRoll(finalRoll);
 
         if (finalRoll === 6 && currentPlayer.isReady === false) {
-          setMessage(
-            `You rolled a 6! \n You can move your pawn.`
-          );
+          setMessage(`You rolled a 6! \n You can move your pawn.`);
           dispatch(
             updatePlayer({
               id: currentPlayerIndex,
@@ -114,8 +111,28 @@ const DashBoard = () => {
                     pawnIndex: currentPawnIndex,
                     position: { x: 400, y: 400, id: 72 },
                     isFinished: true,
+                    isOnBoard: false,
                   })
                 );
+                const pawns = currentPlayer.pawns;
+                const nextPawnIdx = pawns?.findIndex(
+                  (p, idx) =>
+                    !p.isFinished && !p.isOnBoard && idx !== currentPawnIndex
+                );
+
+                if (typeof nextPawnIdx === "number" && nextPawnIdx !== -1) {
+                  dispatch(
+                    setPawnActualPosition({
+                      playerIndex: currentPlayerIndex,
+                      pawnIndex: nextPawnIdx,
+                      position: {
+                        ...getStartPosition(currentPlayer.color ?? "none"),
+                        id: 0,
+                      },
+                      isOnBoard: true,
+                    })
+                  );
+                }
                 const newScore = (currentPlayer.score || 0) + 1;
                 if (newScore === currentPlayer?.pawns?.length) {
                   setMessage(
@@ -131,6 +148,15 @@ const DashBoard = () => {
                     score: newScore,
                   })
                 );
+
+                const currentOrderIdx =
+                  playersOrder.indexOf(currentPlayerIndex);
+                const nextPlayerIndex =
+                  currentOrderIdx !== -1 &&
+                  currentOrderIdx < playersOrder.length - 1
+                    ? playersOrder[currentOrderIdx + 1]
+                    : playersOrder[0];
+                dispatch(setCurrentPlayerIndex(nextPlayerIndex));
               }
             }
           }
@@ -180,10 +206,18 @@ const DashBoard = () => {
           onAllPlayersRegistered={() => setShowPlayerForm(false)}
         />
       ) : (
-        <div className="bg-white p-4 rounded shadow-md">
-          <h1 className="text-2xl font-bold mb-4">{currentPlayer?.name}'s Turn</h1>
+        <div
+          className="p-4 rounded shadow-md"
+          style={{
+            backgroundColor: colorMap[currentPlayer?.color ?? "none"] || "white",
+            transition: "background-color 0.3s ease",
+          }}
+        >
+          <h1 className="text-2xl font-bold mb-4">
+            Game Dashboard
+          </h1>
           <a
-            className="inline-block rounded-sm bg-indigo-600 px-8 py-3 text-sm font-medium text-white transition hover:scale-110 hover:-rotate-2 focus:ring-3 focus:outline-hidden cursor-pointer"
+            className="inline-block rounded-sm bg-indigo-600 px-8 py-3 text-sm font-medium text-white transition hover:scale-110 hover:-rotate-2 focus:outline-hidden cursor-pointer"
             href="#"
             onClick={handleRollDice}
           >
@@ -195,7 +229,7 @@ const DashBoard = () => {
           >
             Restart
           </button>
-          {message && <p className="text-red-500 mt-2">{message}</p>}
+          {message && <p className="mt-2">{message}</p>}
         </div>
       )}
     </div>

@@ -1,6 +1,5 @@
 import { useSelector } from "react-redux";
 import type { Player } from "../utils/intefaces/player";
-import { v4 as uuidv4 } from "uuid";
 import PawnPosition from "./PawnPosition";
 import { getRoute } from "../utils/helpers";
 
@@ -20,16 +19,25 @@ const PlayersOnBoard = () => {
       {players?.map((player, playerIdx) =>
         player.color
           ? player.pawns?.map((pawn, pawnIdx) => {
-              // Seul le pion courant du joueur courant est animé
+              if (pawn.isFinished || !pawn.isOnBoard) return null;
+
+              if (
+                playerIdx === currentPlayerIndex &&
+                pawnIdx !== currentPawnIndex
+              ) {
+                return null;
+              }
+
               const isAnimated =
-                playerIdx === currentPlayerIndex && pawnIdx === currentPawnIndex;
+                playerIdx === currentPlayerIndex &&
+                pawnIdx === currentPawnIndex;
               const fromIndex = isAnimated
                 ? pawn.lastPosition?.id ?? pawn.actualPosition?.id ?? 0
                 : pawn.actualPosition?.id ?? 0;
               const toIndex = pawn.actualPosition?.id ?? 0;
               return (
                 <PawnPosition
-                  key={uuidv4()}
+                  key={player.id + "-" + pawnIdx}
                   path={getRoute(player.color!)}
                   fromIndex={fromIndex}
                   toIndex={toIndex}

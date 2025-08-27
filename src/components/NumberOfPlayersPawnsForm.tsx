@@ -3,17 +3,22 @@ import { useDispatch } from "react-redux";
 import { setNumOfPawns } from "../utils/slices/numOfPawnsSlice";
 import type { Player } from "../utils/intefaces/player";
 import { addPlayer } from "../utils/slices/playersSlice";
+import GameLog from "./GameLog";
 
 interface NumberOfPlayersFormProps {
   numPlayers: number;
   setNumPlayers: (num: number) => void;
   handleNumPlayersSubmit: (num: number) => void;
+  gameLog?: string[];
+  handleSetGameLog?: (log: string[]) => void;
 }
 
 const NumberOfPlayersPawnsForm = ({
   numPlayers,
   setNumPlayers,
   handleNumPlayersSubmit,
+  gameLog,
+  handleSetGameLog,
 }: NumberOfPlayersFormProps) => {
   const dispatch = useDispatch();
   const [numPawns, setNumPawns] = useState<number | null>(0);
@@ -73,6 +78,7 @@ const NumberOfPlayersPawnsForm = ({
           Start Game
         </button>
       </form>
+      <GameLog gameLog={gameLog || []} handleSetGameLog={handleSetGameLog}/>
     </div>
   );
 };

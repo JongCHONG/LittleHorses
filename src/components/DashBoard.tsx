@@ -19,7 +19,7 @@ import { colorMap } from "../utils/colorMap";
 
 const DashBoard = () => {
   const dispatch = useDispatch();
-  const [message, setMessage] = useState<string>("");
+  const [gameLog, setGameLog] = useState<string[]>([]);
   const [diceRoll, setDiceRoll] = useState<number>(0);
   const [numPlayers, setNumPlayers] = useState<number | null>(null);
   const [showNumPlayersForm, setShowNumPlayersForm] = useState<boolean>(true);
@@ -38,6 +38,12 @@ const DashBoard = () => {
   );
   const playersOrder = useSelector((state: any) => state.playersOrder);
 
+  const addLog = (message: string) => {
+    const timestamp = new Date().toLocaleTimeString();
+    const logEntry = `[${timestamp}] ${message}`;
+    setGameLog((prev) => [...prev, logEntry]);
+  };
+
   useEffect(() => {
     if (currentPlayer?.pawns && currentPlayer.pawns.length > 0) {
       dispatch(
@@ -46,15 +52,30 @@ const DashBoard = () => {
         })
       );
     }
-    if (!currentPlayer?.isReady) {
-      setMessage(`You need to roll a 6 to start moving your pawn.`);
+    if (currentPlayer) {
+      if (!currentPlayer?.isReady) {
+        addLog(
+          `${currentPlayer?.name}'s turn - Roll a 6 to start moving your pawn.`
+        );
+      } else {
+        addLog(`${currentPlayer?.name}'s turn - Roll the dice to move.`);
+      }
     }
   }, [currentPlayerIndex, currentPlayer?.pawns, dispatch]);
 
+  // useEffect(() => {
+  //   if (currentPlayer) {
+  //     if (!currentPlayer?.isReady) {
+  //       addLog(
+  //         `${currentPlayer?.name}'s turn - Roll a 6 to start moving your pawn.`
+  //       );
+  //     } else {
+  //       addLog(`${currentPlayer?.name}'s turn - Roll the dice to move.`);
+  //     }
+  //   }
+  // }, [currentPlayer]);
+
   const handleRollDice = () => {
-    if (message) {
-      setMessage("");
-    }
     let intervalId: ReturnType<typeof setInterval>;
     let count = 0;
     intervalId = setInterval(() => {
@@ -66,8 +87,10 @@ const DashBoard = () => {
         const finalRoll = 6;
         setDiceRoll(finalRoll);
 
+        addLog(`${currentPlayer?.name} rolled a ${finalRoll}`);
+
         if (finalRoll === 6 && currentPlayer.isReady === false) {
-          setMessage(`You rolled a 6! \n You can move your pawn.`);
+          addLog("You rolled a 6! You can now start moving your pawn.");
           dispatch(
             updatePlayer({
               id: currentPlayerIndex,
@@ -84,7 +107,7 @@ const DashBoard = () => {
             if (typeof pawnPositionId === "number") {
               const newIndex = pawnPositionId + finalRoll;
               if (newIndex < currentRoute.length) {
-                setMessage(
+                addLog(
                   `${currentPlayer?.name} moves forward by ${finalRoll} spaces`
                 );
 
@@ -132,14 +155,13 @@ const DashBoard = () => {
                       isOnBoard: true,
                     })
                   );
+                  addLog(`${currentPlayer?.name}'s next pawn enters the board`);
                 }
                 const newScore = (currentPlayer.score || 0) + 1;
                 if (newScore === currentPlayer?.pawns?.length) {
-                  setMessage(
-                    `Congratulations ${currentPlayer.name}, you won the game!`
-                  );
+                  addLog(`🎉 ${currentPlayer.name} WINS THE GAME! 🎉`);
                 } else {
-                  setMessage("You reached the end! Your pawn is finished.");
+                  addLog("You reached the end! Your pawn is finished.");
                 }
 
                 dispatch(
@@ -160,6 +182,8 @@ const DashBoard = () => {
               }
             }
           }
+        } else {
+          addLog(`${currentPlayer?.name} needs a 6 to start moving`);
         }
       }
     }, 50);
@@ -180,7 +204,7 @@ const DashBoard = () => {
 
   const resetGame = useCallback(() => {
     setDiceRoll(0);
-    setMessage("");
+    setGameLog([]);
     setNumPlayers(null);
     setShowNumPlayersForm(true);
     dispatch({ type: "RESET_GAME" });
@@ -193,6 +217,8 @@ const DashBoard = () => {
           numPlayers={numPlayers ?? 0}
           setNumPlayers={setNumPlayers}
           handleNumPlayersSubmit={handleNumPlayersSubmit}
+          gameLog={gameLog}
+          handleSetGameLog={setGameLog}
         />
       ) : showPlayersOrderForm ? (
         <PlayersOrderForm
@@ -209,13 +235,12 @@ const DashBoard = () => {
         <div
           className="p-4 rounded shadow-md"
           style={{
-            backgroundColor: colorMap[currentPlayer?.color ?? "none"] || "white",
+            backgroundColor:
+              colorMap[currentPlayer?.color ?? "none"] || "white",
             transition: "background-color 0.3s ease",
           }}
         >
-          <h1 className="text-2xl font-bold mb-4">
-            Game Dashboard
-          </h1>
+          <h1 className="text-2xl font-bold mb-4">Game Dashboard</h1>
           <a
             className="inline-block rounded-sm bg-indigo-600 px-8 py-3 text-sm font-medium text-white transition hover:scale-110 hover:-rotate-2 focus:outline-hidden cursor-pointer"
             href="#"
@@ -229,7 +254,6 @@ const DashBoard = () => {
           >
             Restart
           </button>
-          {message && <p className="mt-2">{message}</p>}
         </div>
       )}
     </div>

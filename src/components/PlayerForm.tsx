@@ -8,6 +8,8 @@ import { getStartPosition } from "../utils/helpers";
 import PawnButton from "./PawnButton";
 import CustomSelect from "./CustomSelect";
 import { setCurrentPlayerIndex } from "../utils/slices/currentSlice";
+import GameLog from "./GameLog";
+import { useGameLog } from "../utils/contexts/GameLogContext";
 
 interface PlayerFormProps {
   numPlayers: number;
@@ -26,6 +28,7 @@ const PlayerForm = ({
   onAllPlayersRegistered,
 }: PlayerFormProps) => {
   const dispatch = useDispatch();
+  const { addLog } = useGameLog();
   const takenColors = useSelector((state: any) =>
     state.players.map((p: Player) => p.color)
   );
@@ -75,6 +78,10 @@ const PlayerForm = ({
           pawns,
         })
       );
+      addLog(
+        `${tempPlayer.name} registered with color ${tempPlayer.color}`
+      );
+
       const currentOrderIdx = playersOrder.indexOf(currentPlayerIndex);
       const nextPlayerIndex =
         currentOrderIdx !== -1 && currentOrderIdx < playersOrder.length - 1
@@ -156,7 +163,7 @@ const PlayerForm = ({
             takenColors={takenColors}
           />
         </div>
-        <div className="mb-5 flex items-center gap-2">
+        <div className="mb-1 flex items-center gap-2">
           <label
             htmlFor="pawnName"
             className="text-sm font-medium text-gray-700"
@@ -202,6 +209,7 @@ const PlayerForm = ({
           Restart
         </button>
       </form>
+      <GameLog height={440} />
     </div>
   );
 };

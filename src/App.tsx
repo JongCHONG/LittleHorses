@@ -20,10 +20,11 @@ import {
   PrussianBlueLastCirclePosition,
 } from "./utils/path/prussianBluePath";
 import { PrussianBlueEndZones } from "./utils/path/prussianBluePath";
+import { GameLogProvider } from "./utils/contexts/GameLogContext";
 
 function App() {
   return (
-    <>
+    <GameLogProvider>
       <Board
         tanCirclePositions={[...TanCirclePositions, TanLastCirclePosition]}
         tanEndZones={TanEndZones}
@@ -43,7 +44,7 @@ function App() {
         ]}
         prussianBlueEndZones={PrussianBlueEndZones}
       />
-    </>
+    </GameLogProvider>
   );
 }
 

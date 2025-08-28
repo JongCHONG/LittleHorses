@@ -4,24 +4,23 @@ import { setNumOfPawns } from "../utils/slices/numOfPawnsSlice";
 import type { Player } from "../utils/intefaces/player";
 import { addPlayer } from "../utils/slices/playersSlice";
 import GameLog from "./GameLog";
+import { useGameLog } from "../utils/contexts/GameLogContext";
 
 interface NumberOfPlayersFormProps {
   numPlayers: number;
   setNumPlayers: (num: number) => void;
   handleNumPlayersSubmit: (num: number) => void;
-  gameLog?: string[];
-  handleSetGameLog?: (log: string[]) => void;
 }
 
 const NumberOfPlayersPawnsForm = ({
   numPlayers,
   setNumPlayers,
   handleNumPlayersSubmit,
-  gameLog,
-  handleSetGameLog,
 }: NumberOfPlayersFormProps) => {
   const dispatch = useDispatch();
   const [numPawns, setNumPawns] = useState<number | null>(0);
+  const { addLog } = useGameLog();
+
   const initialPlayer: Player = {
     id: 0,
     color: "none",
@@ -33,7 +32,7 @@ const NumberOfPlayersPawnsForm = ({
   };
 
   return (
-    <div className="bg-white p-4 rounded shadow-md">
+    <div className="bg-white p-4 rounded shadow-md flex flex-col space-between">
       <h2 className="text-lg font-semibold mb-4 text-[#031D44]">
         Set Game Parameters
       </h2>
@@ -43,7 +42,9 @@ const NumberOfPlayersPawnsForm = ({
           if (numPlayers && numPlayers > 0) handleNumPlayersSubmit(numPlayers);
           dispatch(setNumOfPawns(numPawns ?? 0));
           for (let i = 0; i < numPlayers; i++) {
-            dispatch(addPlayer({ ...initialPlayer, id: i, name: `Player ${i + 1}` }));
+            dispatch(
+              addPlayer({ ...initialPlayer, id: i, name: `Player ${i + 1}` })
+            );
           }
         }}
       >
@@ -74,11 +75,14 @@ const NumberOfPlayersPawnsForm = ({
         <button
           type="submit"
           className="bg-indigo-600 text-white px-4 py-2 rounded"
+          onClick={() => {
+            addLog(`Game started with ${numPlayers} player(s) and ${numPawns} pawn(s) each.`);
+          }}
         >
           Start Game
         </button>
       </form>
-      <GameLog gameLog={gameLog || []} handleSetGameLog={handleSetGameLog}/>
+      <GameLog height={520} />
     </div>
   );
 };

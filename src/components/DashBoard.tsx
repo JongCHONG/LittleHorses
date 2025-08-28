@@ -16,10 +16,12 @@ import {
 import { getRoute, getStartPosition } from "../utils/helpers";
 import PlayersOrderForm from "./PlayersOrderForm";
 import { colorMap } from "../utils/colorMap";
+import { useGameLog } from "../utils/contexts/GameLogContext";
+import GameLog from "./GameLog";
 
 const DashBoard = () => {
   const dispatch = useDispatch();
-  const [gameLog, setGameLog] = useState<string[]>([]);
+  const { addLog, clearLog } = useGameLog();
   const [diceRoll, setDiceRoll] = useState<number>(0);
   const [numPlayers, setNumPlayers] = useState<number | null>(null);
   const [showNumPlayersForm, setShowNumPlayersForm] = useState<boolean>(true);
@@ -38,12 +40,6 @@ const DashBoard = () => {
   );
   const playersOrder = useSelector((state: any) => state.playersOrder);
 
-  const addLog = (message: string) => {
-    const timestamp = new Date().toLocaleTimeString();
-    const logEntry = `[${timestamp}] ${message}`;
-    setGameLog((prev) => [...prev, logEntry]);
-  };
-
   useEffect(() => {
     if (currentPlayer?.pawns && currentPlayer.pawns.length > 0) {
       dispatch(
@@ -52,15 +48,15 @@ const DashBoard = () => {
         })
       );
     }
-    if (currentPlayer) {
-      if (!currentPlayer?.isReady) {
-        addLog(
-          `${currentPlayer?.name}'s turn - Roll a 6 to start moving your pawn.`
-        );
-      } else {
-        addLog(`${currentPlayer?.name}'s turn - Roll the dice to move.`);
-      }
-    }
+    // if (currentPlayer) {
+    //   if (!currentPlayer?.isReady) {
+    //     addLog(
+    //       `${currentPlayer?.name}'s turn - Roll a 6 to start moving your pawn.`
+    //     );
+    //   } else {
+    //     addLog(`${currentPlayer?.name}'s turn - Roll the dice to move.`);
+    //   }
+    // }
   }, [currentPlayerIndex, currentPlayer?.pawns, dispatch]);
 
   // useEffect(() => {
@@ -189,14 +185,12 @@ const DashBoard = () => {
     }, 50);
   };
 
-  // Après avoir choisi le nombre de joueurs :
   const handleNumPlayersSubmit = (num: number) => {
     setNumPlayers(num);
     setShowNumPlayersForm(false);
     setShowPlayersOrderForm(true);
   };
 
-  // Quand l’ordre est validé dans PlayersOrderForm :
   const handlePlayersOrderValidated = () => {
     setShowPlayersOrderForm(false);
     setShowPlayerForm(true);
@@ -204,21 +198,19 @@ const DashBoard = () => {
 
   const resetGame = useCallback(() => {
     setDiceRoll(0);
-    setGameLog([]);
+    clearLog();
     setNumPlayers(null);
     setShowNumPlayersForm(true);
     dispatch({ type: "RESET_GAME" });
   }, [dispatch]);
 
   return (
-    <div className="p-5">
+    <div className="p-5 flex align-items-center">
       {showNumPlayersForm ? (
         <NumberOfPlayersPawnsForm
           numPlayers={numPlayers ?? 0}
           setNumPlayers={setNumPlayers}
           handleNumPlayersSubmit={handleNumPlayersSubmit}
-          gameLog={gameLog}
-          handleSetGameLog={setGameLog}
         />
       ) : showPlayersOrderForm ? (
         <PlayersOrderForm
@@ -232,29 +224,51 @@ const DashBoard = () => {
           onAllPlayersRegistered={() => setShowPlayerForm(false)}
         />
       ) : (
-        <div
-          className="p-4 rounded shadow-md"
-          style={{
-            backgroundColor:
+        <>
+            <div
+            className="p-4 rounded shadow-md"
+            style={{
+              backgroundColor:
               colorMap[currentPlayer?.color ?? "none"] || "white",
-            transition: "background-color 0.3s ease",
-          }}
-        >
-          <h1 className="text-2xl font-bold mb-4">Game Dashboard</h1>
-          <a
-            className="inline-block rounded-sm bg-indigo-600 px-8 py-3 text-sm font-medium text-white transition hover:scale-110 hover:-rotate-2 focus:outline-hidden cursor-pointer"
-            href="#"
-            onClick={handleRollDice}
-          >
-            Roll Dice: {diceRoll}
-          </a>
-          <button
-            className="ml-4 inline-block rounded-sm bg-red-800 px-6 py-2 text-sm font-medium text-white transition hover:scale-105 focus:ring-2 focus:outline-none cursor-pointer"
-            onClick={resetGame}
-          >
-            Restart
-          </button>
-        </div>
+              transition: "background-color 0.3s ease",
+            }}
+            >
+            <h1 className="text-2xl font-bold mb-4">Game Dashboard</h1>
+            <div className="mb-4">
+              <h2 className="text-lg font-semibold mb-2">
+              Ordre des joueurs :
+              </h2>
+              <ol className="list-decimal list-inside">
+              {playersOrder.map((playerIdx: number) => (
+                <li
+                key={playerIdx}
+                className={
+                  playerIdx === currentPlayerIndex
+                  ? "font-bold text-indigo-700"
+                  : ""
+                }
+                >
+                {players[playerIdx]?.name || `Joueur ${playerIdx + 1}`}
+                </li>
+              ))}
+              </ol>
+            </div>
+            <a
+              className="inline-block rounded-sm bg-indigo-600 px-8 py-3 text-sm font-medium text-white transition hover:scale-110 hover:-rotate-2 focus:outline-hidden cursor-pointer"
+              href="#"
+              onClick={handleRollDice}
+            >
+              Roll Dice: {diceRoll}
+            </a>
+            <button
+              className="ml-4 inline-block rounded-sm bg-red-800 px-6 py-2 text-sm font-medium text-white transition hover:scale-105 focus:ring-2 focus:outline-none cursor-pointer"
+              onClick={resetGame}
+            >
+              Restart
+            </button>
+            <GameLog height={500 - (numPlayers ?? 0) * 10} />
+            </div>
+        </>
       )}
     </div>
   );

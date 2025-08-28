@@ -4,6 +4,8 @@ import { useDispatch, useSelector } from "react-redux";
 import type { Player } from "../utils/intefaces/player";
 import { setCurrentPlayerIndex } from "../utils/slices/currentSlice";
 import { setPlayersOrder } from "../utils/slices/playersOrderSlice";
+import GameLog from "./GameLog";
+import { useGameLog } from "../utils/contexts/GameLogContext";
 
 type PlayerWithRoll = Player & { roll: number | null };
 
@@ -17,6 +19,7 @@ const PlayersOrderForm = ({
   handleReset,
 }: PlayersOrderFormProps) => {
   const dispatch = useDispatch();
+  const { addLog } = useGameLog();
   const players = useSelector((state: { players: Player[] }) => state.players);
   const [tempPlayersOrder, setTempPlayersOrder] = useState<PlayerWithRoll[]>(
     players.map((p) => ({ ...p, roll: null }))
@@ -43,6 +46,23 @@ const PlayersOrderForm = ({
         clearInterval(intervalId);
         const finalRoll = Math.floor(Math.random() * 6) + 1;
         setDiceRoll(finalRoll);
+        addLog(
+          `${tempPlayersOrder[tempCurrentPlayerIndex].name} rolled a ${finalRoll}`
+        );
+
+        if (tempCurrentPlayerIndex === tempPlayersOrder.length - 1) {
+          const finalOrder = [...tempPlayersOrder];
+          finalOrder[tempCurrentPlayerIndex] = {
+            ...finalOrder[tempCurrentPlayerIndex],
+            roll: finalRoll,
+          };
+          const sortedOrder = finalOrder
+            .sort((a, b) => (b.roll ?? 0) - (a.roll ?? 0));
+          const orderStr = sortedOrder
+            .map((p) => `${p.name} (${p.roll})`)
+            .join(" -> ");
+          addLog(`Final Order : ${orderStr}`);
+        }
 
         setTempPlayersOrder((prev) => {
           const updated = [...prev];
@@ -68,7 +88,7 @@ const PlayersOrderForm = ({
   return (
     <div className="bg-white p-4 rounded shadow-md">
       <h1 className="text-2xl font-bold mb-4">Players Order</h1>
-      <div className="mb-4">
+      <div className="mb-4 h-25">
         {tempPlayersOrder.map((p, i) => (
           <div key={p.id}>
             {i + 1}. {p.name} {p.roll !== null ? `: ${p.roll}` : ""}
@@ -91,6 +111,7 @@ const PlayersOrderForm = ({
         Restart
       </button>
       {message && <p className="text-red-500 mt-2">{message}</p>}
+      <GameLog height={480} />
     </div>
   );
 };

@@ -38,7 +38,9 @@ const DashBoard = () => {
     (state: { current: { currentPawnIndexByPlayer: number } }) =>
       state.current.currentPawnIndexByPlayer
   );
-  const playersOrder = useSelector((state: any) => state.playersOrder);
+  const playersOrder = useSelector(
+    (state: { playersOrder: number[] }) => state.playersOrder
+  );
 
   useEffect(() => {
     if (currentPlayer?.pawns && currentPlayer.pawns.length > 0) {
@@ -48,33 +50,11 @@ const DashBoard = () => {
         })
       );
     }
-    // if (currentPlayer) {
-    //   if (!currentPlayer?.isReady) {
-    //     addLog(
-    //       `${currentPlayer?.name}'s turn - Roll a 6 to start moving your pawn.`
-    //     );
-    //   } else {
-    //     addLog(`${currentPlayer?.name}'s turn - Roll the dice to move.`);
-    //   }
-    // }
   }, [currentPlayerIndex, currentPlayer?.pawns, dispatch]);
 
-  // useEffect(() => {
-  //   if (currentPlayer) {
-  //     if (!currentPlayer?.isReady) {
-  //       addLog(
-  //         `${currentPlayer?.name}'s turn - Roll a 6 to start moving your pawn.`
-  //       );
-  //     } else {
-  //       addLog(`${currentPlayer?.name}'s turn - Roll the dice to move.`);
-  //     }
-  //   }
-  // }, [currentPlayer]);
-
   const handleRollDice = () => {
-    let intervalId: ReturnType<typeof setInterval>;
     let count = 0;
-    intervalId = setInterval(() => {
+    const intervalId: ReturnType<typeof setInterval> = setInterval(() => {
       setDiceRoll(Math.floor(Math.random() * 6) + 1);
       count++;
       if (count > 10) {
@@ -225,32 +205,32 @@ const DashBoard = () => {
         />
       ) : (
         <>
-            <div
+          <div
             className="p-4 rounded shadow-md"
             style={{
               backgroundColor:
-              colorMap[currentPlayer?.color ?? "none"] || "white",
+                colorMap[currentPlayer?.color ?? "none"] || "white",
               transition: "background-color 0.3s ease",
             }}
-            >
+          >
             <h1 className="text-2xl font-bold mb-4">Game Dashboard</h1>
             <div className="mb-4">
               <h2 className="text-lg font-semibold mb-2">
-              Ordre des joueurs :
+                Ordre des joueurs :
               </h2>
               <ol className="list-decimal list-inside">
-              {playersOrder.map((playerIdx: number) => (
-                <li
-                key={playerIdx}
-                className={
-                  playerIdx === currentPlayerIndex
-                  ? "font-bold text-indigo-700"
-                  : ""
-                }
-                >
-                {players[playerIdx]?.name || `Joueur ${playerIdx + 1}`}
-                </li>
-              ))}
+                {playersOrder.map((playerIdx: number) => (
+                  <li
+                    key={playerIdx}
+                    className={
+                      playerIdx === currentPlayerIndex
+                        ? "font-bold text-indigo-700"
+                        : ""
+                    }
+                  >
+                    {players[playerIdx]?.name || `Joueur ${playerIdx + 1}`}
+                  </li>
+                ))}
               </ol>
             </div>
             <a
@@ -267,7 +247,7 @@ const DashBoard = () => {
               Restart
             </button>
             <GameLog height={500 - (numPlayers ?? 0) * 10} />
-            </div>
+          </div>
         </>
       )}
     </div>

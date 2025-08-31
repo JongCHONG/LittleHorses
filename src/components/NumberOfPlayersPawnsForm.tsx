@@ -76,7 +76,9 @@ const NumberOfPlayersPawnsForm = ({
           type="submit"
           className="bg-indigo-600 text-white px-4 py-2 rounded"
           onClick={() => {
-            addLog(`Game started with ${numPlayers} player(s) and ${numPawns} pawn(s) each.`);
+            addLog(
+              `Game started with ${numPlayers} player(s) and ${numPawns} pawn(s) each.`
+            );
           }}
         >
           Start Game

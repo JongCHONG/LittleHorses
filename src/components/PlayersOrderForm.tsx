@@ -37,9 +37,8 @@ const PlayersOrderForm = ({
     }
     setIsRolling(true);
     setMessage("");
-    let intervalId: ReturnType<typeof setInterval>;
-    let count = 0;
-    intervalId = setInterval(() => {
+    let count = 0; // <-- Déplacé ici
+    const intervalId: ReturnType<typeof setInterval> = setInterval(() => {
       setDiceRoll(Math.floor(Math.random() * 6) + 1);
       count++;
       if (count > 10) {
@@ -56,8 +55,9 @@ const PlayersOrderForm = ({
             ...finalOrder[tempCurrentPlayerIndex],
             roll: finalRoll,
           };
-          const sortedOrder = finalOrder
-            .sort((a, b) => (b.roll ?? 0) - (a.roll ?? 0));
+          const sortedOrder = finalOrder.sort(
+            (a, b) => (b.roll ?? 0) - (a.roll ?? 0)
+          );
           const orderStr = sortedOrder
             .map((p) => `${p.name} (${p.roll})`)
             .join(" -> ");

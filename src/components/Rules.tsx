@@ -30,7 +30,7 @@ const Rules = () => {
             nombre de cases indiqué.
           </li>
           <li>
-            Les pions avancent dans le sens indiqué par le parcours de couleur :
+            Les pions avancent dans le sens indiqué par le parcours de couleur :
             chaque joueur a sa case de départ et suit le tracé extérieur commun
             à tous (dans le sens horaire ou anti-horaire selon les règles
             locales).
@@ -44,8 +44,8 @@ const Rules = () => {
         <ul className="list-disc list-inside space-y-1">
           <li>
             Si un pion termine sur la même case qu’un autre (hors cases
-            d'arrivée ou d’écurie), le pion déjà présent est « mangé » et
-            retourne à son écurie d’origine : il devra refaire un 6 pour sortir.
+            d'arrivée ou d’écurie), le pion déjà présent est « mangé » et
+            retourne à son écurie d’origine : il devra refaire un 6 pour sortir.
           </li>
         </ul>
       </section>
@@ -55,13 +55,13 @@ const Rules = () => {
         </h3>
         <ul className="list-disc list-inside space-y-1">
           <li>
-            Quand un pion a fait tout le tour, il bifurque sur sa « rampe
-            d’arrivée » (le chemin coloré qui pointe vers le centre). Là, il
+            Quand un pion a fait tout le tour, il bifurque sur sa « rampe
+            d’arrivée » (le chemin coloré qui pointe vers le centre). Là, il
             avance case par case grâce aux lancers de dés.
           </li>
           <li>
             Pour aller sur la dernière case d’arrivée, il faut obtenir
-            exactement le nombre de points restants au dé : trop, le pion ne
+            exactement le nombre de points restants au dé : trop, le pion ne
             bouge pas.
           </li>
         </ul>

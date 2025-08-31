@@ -2,14 +2,16 @@ import { useState, type FormEvent, useCallback } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { createSelector } from "@reduxjs/toolkit";
 
+import GameLog from "./GameLog";
+import PawnButton from "./PawnButton";
+import CustomSelect from "./CustomSelect";
+
 import type { Player } from "../utils/intefaces/player";
 import { updatePlayer } from "../utils/slices/playersSlice";
 import { getStartPosition } from "../utils/helpers";
-import PawnButton from "./PawnButton";
-import CustomSelect from "./CustomSelect";
 import { setCurrentPlayerIndex } from "../utils/slices/currentSlice";
-import GameLog from "./GameLog";
 import { useGameLog } from "../utils/contexts/GameLogContext";
+import type { RootState } from "../utils/store";
 
 interface PlayerFormProps {
   numPlayers: number;
@@ -17,7 +19,7 @@ interface PlayerFormProps {
   onAllPlayersRegistered?: () => void;
 }
 
-const selectPlayers = (state: any) => state.players;
+const selectPlayers = (state: RootState) => state.players;
 const selectTakenPawnNames = createSelector([selectPlayers], (players) =>
   players.map((p: Player) => p.pawnName)
 );
@@ -29,8 +31,13 @@ const PlayerForm = ({
 }: PlayerFormProps) => {
   const dispatch = useDispatch();
   const { addLog } = useGameLog();
-  const takenColors = useSelector((state: any) =>
-    state.players.map((p: Player) => p.color)
+  const takenColors = useSelector((state: RootState) =>
+    state.players
+      .map((p: Player) => p.color)
+      .filter(
+        (c): c is Exclude<Player["color"], "none" | undefined> =>
+          c !== undefined && c !== "none"
+      )
   );
   const takenPawnNames = useSelector(selectTakenPawnNames);
   const numOfPawnsPerTeam = useSelector(
@@ -78,9 +85,7 @@ const PlayerForm = ({
           pawns,
         })
       );
-      addLog(
-        `${tempPlayer.name} registered with color ${tempPlayer.color}`
-      );
+      addLog(`${tempPlayer.name} registered with color ${tempPlayer.color}`);
 
       const currentOrderIdx = playersOrder.indexOf(currentPlayerIndex);
       const nextPlayerIndex =
@@ -110,6 +115,7 @@ const PlayerForm = ({
       playersOrder,
       currentPlayerIndex,
       onAllPlayersRegistered,
+      addLog,
     ]
   );
 

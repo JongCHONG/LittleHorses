@@ -1,3 +1,5 @@
+'use client'
+
 import { useSelector } from "react-redux";
 import type { Player } from "../utils/intefaces/player";
 import PawnPosition from "./PawnPosition";

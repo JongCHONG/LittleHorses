@@ -13,12 +13,10 @@ import Button from "./Button";
 type PlayerWithRoll = Player & { roll: number | null };
 
 interface PlayersOrderFormProps {
-  onValidated: () => void;
   handleReset: () => void;
 }
 
 const PlayersOrderForm = ({
-  onValidated,
   handleReset,
 }: PlayersOrderFormProps) => {
   const dispatch = useDispatch();
@@ -47,9 +45,8 @@ const PlayersOrderForm = ({
         .join(" -> ");
       addLog(`Final Order : ${orderStr}`);
       
-      onValidated();
     }
-  }, [isOrderComplete, tempPlayersOrder, dispatch, onValidated, addLog]);
+  }, [isOrderComplete, tempPlayersOrder, dispatch, addLog]);
 
   const handleRollDice = () => {
     if (isRolling) return;

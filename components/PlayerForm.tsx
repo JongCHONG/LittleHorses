@@ -14,6 +14,7 @@ import { getStartPosition } from "../utils/helpers";
 import { setCurrentPlayerIndex } from "../utils/slices/currentSlice";
 import { useGameLog } from "../utils/contexts/GameLogContext";
 import type { RootState } from "../utils/store";
+import Button from "./Button";
 
 interface PlayerFormProps {
   numPlayers: number;
@@ -203,19 +204,18 @@ const PlayerForm = ({
             disabled={takenPawnNames.includes("Planet")}
           />
         </div>
-        <button
+        <Button
           disabled={!isFormValid}
           type="submit"
-          className="inline-block rounded-sm bg-indigo-600 px-8 py-3 text-sm font-medium text-white transition hover:scale-110 hover:-rotate-2 focus:ring-3 focus:outline-hidden cursor-pointer"
         >
           Register
-        </button>
-        <button
-          className="ml-4 inline-block rounded-sm bg-red-800 px-6 py-2 text-sm font-medium text-white transition hover:scale-105 focus:ring-2 focus:outline-none cursor-pointer"
+        </Button>
+        <Button
           onClick={handleReset}
+          color="red"
         >
           Restart
-        </button>
+        </Button>
       </form>
       <GameLog height={440} />
     </div>

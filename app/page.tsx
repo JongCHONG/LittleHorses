@@ -12,10 +12,10 @@ export default function Home() {
       <p className="my-4 text-center text-gray-700 max-w-xl">
         Welcome to Little Horses! Enjoy a fun and simple board game experience.{" "}
         <br />
-        Click "New Game" to start playing and have a great time with friends or
+        Click &quot;New Game&quot; to start playing and have a great time with friends or
         family.
         <br />
-        Use "Game Rules" to learn how to play, and "Continue" to resume your last game.
+        Use &quot;Game Rules&quot; to learn how to play, and &quot;Continue&quot; to resume your last game.
       </p>
       <div className="flex space-x-4">
         <Button onClick={() => router.push("/rules")}>Game Rules</Button>

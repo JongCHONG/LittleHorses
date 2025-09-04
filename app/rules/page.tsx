@@ -1,3 +1,5 @@
+"use client";
+
 const Rules = () => {
   return (
     <div className="max-w-lg rounded-lg shadow-md p-6 mx-auto">
@@ -35,11 +37,11 @@ const Rules = () => {
       </section>
       <section className="mb-6">
         <h3 className="text-lg font-semibold mb-2 text-red-700">
-          Capturing an Opponent's Piece
+          Capturing an Opponent&#39;s Piece
         </h3>
         <ul className="list-disc list-inside space-y-1">
           <li>
-            If a piece lands on the same square as another (except for the finish or stable squares), the piece already there is "captured" and sent back to its original stable: it must roll a 6 again to come out.
+            If a piece lands on the same square as another (except for the finish or stable squares), the piece already there is &quot;captured&quot; and sent back to its original stable: it must roll a 6 again to come out.
           </li>
         </ul>
       </section>
@@ -49,7 +51,7 @@ const Rules = () => {
         </h3>
         <ul className="list-disc list-inside space-y-1">
           <li>
-            When a piece has completed a full lap, it turns onto its "final stretch" (the colored path leading to the center). There, it advances one square at a time according to dice rolls.
+            When a piece has completed a full lap, it turns onto its &#39;final stretch&#39; (the colored path leading to the center). There, it advances one square at a time according to dice rolls.
           </li>
           <li>
             To reach the last finish square, you must roll exactly the number of spaces remaining: if you roll too high, the piece does not move.

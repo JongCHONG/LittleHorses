@@ -1,3 +1,5 @@
+'use client'
+
 interface CircleProps {
   color: string;
   x: number;

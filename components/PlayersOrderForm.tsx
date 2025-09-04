@@ -1,4 +1,6 @@
-import { useState } from "react";
+'use client'
+
+import { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
 import type { Player } from "../utils/intefaces/player";
@@ -28,6 +30,26 @@ const PlayersOrderForm = ({
   const [diceRoll, setDiceRoll] = useState<number>(0);
   const [isRolling, setIsRolling] = useState(false);
   const [message, setMessage] = useState<string>("");
+  const [isOrderComplete, setIsOrderComplete] = useState(false);
+
+  // Effet pour gérer la fin du processus de lancement de dés
+  useEffect(() => {
+    if (isOrderComplete && tempPlayersOrder.every(p => p.roll !== null)) {
+      const sortedOrder = [...tempPlayersOrder].sort(
+        (a, b) => (b.roll ?? 0) - (a.roll ?? 0)
+      );
+      
+      dispatch(setPlayersOrder(sortedOrder.map((p) => p.id)));
+      dispatch(setCurrentPlayerIndex(sortedOrder[0].id));
+      
+      const orderStr = sortedOrder
+        .map((p) => `${p.name} (${p.roll})`)
+        .join(" -> ");
+      addLog(`Final Order : ${orderStr}`);
+      
+      onValidated();
+    }
+  }, [isOrderComplete, tempPlayersOrder, dispatch, onValidated, addLog]);
 
   const handleRollDice = () => {
     if (isRolling) return;
@@ -35,34 +57,23 @@ const PlayersOrderForm = ({
       setMessage("Tous les joueurs ont lancé le dé.");
       return;
     }
+    
     setIsRolling(true);
     setMessage("");
-    let count = 0; // <-- Déplacé ici
+    let count = 0;
+    
     const intervalId: ReturnType<typeof setInterval> = setInterval(() => {
       setDiceRoll(Math.floor(Math.random() * 6) + 1);
       count++;
+      
       if (count > 10) {
         clearInterval(intervalId);
         const finalRoll = Math.floor(Math.random() * 6) + 1;
         setDiceRoll(finalRoll);
+        
         addLog(
           `${tempPlayersOrder[tempCurrentPlayerIndex].name} rolled a ${finalRoll}`
         );
-
-        if (tempCurrentPlayerIndex === tempPlayersOrder.length - 1) {
-          const finalOrder = [...tempPlayersOrder];
-          finalOrder[tempCurrentPlayerIndex] = {
-            ...finalOrder[tempCurrentPlayerIndex],
-            roll: finalRoll,
-          };
-          const sortedOrder = finalOrder.sort(
-            (a, b) => (b.roll ?? 0) - (a.roll ?? 0)
-          );
-          const orderStr = sortedOrder
-            .map((p) => `${p.name} (${p.roll})`)
-            .join(" -> ");
-          addLog(`Final Order : ${orderStr}`);
-        }
 
         setTempPlayersOrder((prev) => {
           const updated = [...prev];
@@ -70,16 +81,15 @@ const PlayersOrderForm = ({
             ...updated[tempCurrentPlayerIndex],
             roll: finalRoll,
           };
-          if (tempCurrentPlayerIndex === updated.length - 1) {
-            updated.sort((a, b) => (b.roll ?? 0) - (a.roll ?? 0));
-            dispatch(setPlayersOrder(updated.map((p) => p.id)));
-            dispatch(setCurrentPlayerIndex(updated[0].id));
-            onValidated();
-          }
           return updated;
         });
 
         setTempCurrentPlayerIndex((idx) => idx + 1);
+        
+        if (tempCurrentPlayerIndex === tempPlayersOrder.length - 1) {
+          setIsOrderComplete(true);
+        }
+        
         setIsRolling(false);
       }
     }, 50);

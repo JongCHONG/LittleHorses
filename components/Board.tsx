@@ -4,7 +4,6 @@ import { useSelector } from "react-redux";
 
 import BoardElement from "./BoardElement";
 import DashBoard from "./DashBoard";
-// import Rules from "./Rules";
 
 import type { BoardPosition } from "../utils/intefaces/boardPosition";
 import type { Player } from "../utils/intefaces/player";
@@ -44,7 +43,6 @@ const Board = ({
 
   return (
     <div className="flex">
-      {/* <Rules /> */}
       <div
         style={{
           position: "relative",

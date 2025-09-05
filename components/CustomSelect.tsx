@@ -1,3 +1,5 @@
+'use client'
+
 import Select, { type StylesConfig, type GroupBase } from "react-select";
 import type { Player } from "../utils/intefaces/player";
 

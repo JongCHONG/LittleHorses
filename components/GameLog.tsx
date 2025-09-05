@@ -1,10 +1,12 @@
-'use client'
+"use client";
 
 import { useRef, useEffect } from "react";
+import { v4 as uuidv4 } from "uuid";
+
 import { useGameLog } from "../utils/contexts/GameLogContext";
 
 interface GameLogProps {
-  height: number | string;
+  height?: number | string;
 }
 
 const GameLog = ({ height }: GameLogProps) => {
@@ -21,19 +23,26 @@ const GameLog = ({ height }: GameLogProps) => {
   }, [gameLog]);
 
   return (
-    <div className="w-80 bg-gray-100 p-4 mt-2 rounded shadow-md">
+    <div className="w-full lg:w-100 bg-gray-100 p-3 sm:p-4 rounded-lg shadow-md flex flex-col h-full max-h-[600px]">
+      <h2 className="text-lg font-bold mb-3 text-center sm:text-left">
+        Game Log
+      </h2>
+
       <div
         ref={logContainerRef}
-        className={`overflow-y-auto p-3 rounded border`}
-        style={{ height: `${height}px` }}
+        className="flex-1 overflow-y-auto p-3 rounded border bg-white scrollbar-thin"
+        style={{
+          minHeight: height ? `${height}px` : "200px",
+          maxHeight: height ? `${height}px` : "500px",
+        }}
       >
         {gameLog?.length === 0 ? (
-          <p className="text-gray-500 italic">No actions yet...</p>
+          <p className="text-gray-500 italic text-center">No actions yet...</p>
         ) : (
-          gameLog?.map((log, index) => (
+          gameLog?.map((log) => (
             <div
-              key={index}
-              className={`mb-2 p-2 rounded text-sm ${
+              key={uuidv4()}
+              className={`mb-2 p-2 rounded text-xs sm:text-sm ${
                 log.includes("WINS")
                   ? "bg-green-100 text-green-800 font-bold"
                   : log.includes("rolled")
@@ -48,8 +57,9 @@ const GameLog = ({ height }: GameLogProps) => {
           ))
         )}
       </div>
+
       <button
-        className="mt-3 w-full bg-gray-500 text-white px-3 py-2 rounded text-sm hover:bg-gray-600"
+        className="mt-3 w-full bg-gray-500 text-white px-3 py-2 rounded text-sm hover:bg-gray-600 transition-colors"
         onClick={() => clearLog()}
       >
         Clear Log

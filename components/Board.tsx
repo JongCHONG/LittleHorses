@@ -1,5 +1,6 @@
-'use client'
+"use client";
 
+import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 
 import BoardElement from "./BoardElement";
@@ -29,6 +30,7 @@ const Board = ({
   prussianBlueCirclePositions,
   prussianBlueEndZones,
 }: BoardProps) => {
+  const [showBoard, setShowBoard] = useState(true);
   const players = useSelector((state: { players: Player[] }) => state.players);
   const tanPlayer = players.find((player) => player.color === "tan");
   const burntSiennaPlayer = players.find(
@@ -41,50 +43,68 @@ const Board = ({
     (player) => player.color === "prussianBlue"
   );
 
+  useEffect(() => {
+    const hasDefaultPlayer = players.some((player) =>
+      player.name?.toLowerCase().includes("player")
+    );
+    setShowBoard(!hasDefaultPlayer && players.length > 0);
+  }, [players]);
+
   return (
-    <div className="flex">
+    <div className="flex flex-col lg:flex-row min-h-screen bg-gray-50 items-center justify-center lg:justify-start">
       <div
-        style={{
-          position: "relative",
-          width: 850,
-          height: 850,
-          background: "#fafaf0",
-        }}
+        className={`${
+          !showBoard && "hidden"
+        } lg:flex flex-1 justify-center items-center p-2 sm:p-4`}
       >
-        <BoardElement
-          circlePosition={tanCirclePositions}
-          endZonePosition={tanEndZones}
-          name="tan"
-          player={tanPlayer}
-        />
-        <BoardElement
-          circlePosition={burntSiennaCirclePositions}
-          endZonePosition={burntSiennaEndZones}
-          name="burntSienna"
-          player={burntSiennaPlayer}
-        />
-        <BoardElement
-          circlePosition={cambridgeBlueCirclePositions}
-          endZonePosition={cambridgeBlueEndZones}
-          name="cambridgeBlue"
-          player={cambridgeBluePlayer}
-        />
-        <BoardElement
-          circlePosition={prussianBlueCirclePositions}
-          endZonePosition={prussianBlueEndZones}
-          name="prussianBlue"
-          player={prussianBluePlayer}
-        />
+        <div
+          className="relative bg-amber-50 rounded-lg shadow-lg"
+          style={{
+            width: "min(90vw, 90vh, 850px)",
+            height: "min(90vw, 90vh, 850px)",
+            aspectRatio: "1/1",
+          }}
+        >
+          <BoardElement
+            circlePosition={tanCirclePositions}
+            endZonePosition={tanEndZones}
+            name="tan"
+            player={tanPlayer}
+          />
+          <BoardElement
+            circlePosition={burntSiennaCirclePositions}
+            endZonePosition={burntSiennaEndZones}
+            name="burntSienna"
+            player={burntSiennaPlayer}
+          />
+          <BoardElement
+            circlePosition={cambridgeBlueCirclePositions}
+            endZonePosition={cambridgeBlueEndZones}
+            name="cambridgeBlue"
+            player={cambridgeBluePlayer}
+          />
+          <BoardElement
+            circlePosition={prussianBlueCirclePositions}
+            endZonePosition={prussianBlueEndZones}
+            name="prussianBlue"
+            player={prussianBluePlayer}
+          />
+
+          <div
+            className="absolute w-8 h-8 sm:w-10 sm:h-10 md:w-12 md:h-12 rounded-full border-2 border-white"
+            style={{
+              left: "50%",
+              top: "50%",
+              transform: "translate(-50%, -50%)",
+              backgroundColor: "gold",
+            }}
+          />
+        </div>
       </div>
-      <div
-        className="absolute w-[50px] h-[50px] rounded-full border-2 border-white box-border"
-        style={{
-          left: 400,
-          top: 400,
-          backgroundColor: "gold",
-        }}
-      />
-      <DashBoard />
+
+      <div className="w-full lg:w-96 xl:w-1/3 lg:max-w-md">
+        <DashBoard />
+      </div>
     </div>
   );
 };

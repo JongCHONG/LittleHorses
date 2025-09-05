@@ -1,4 +1,4 @@
-'use client'
+"use client";
 
 import { TbRobot } from "react-icons/tb";
 import { TiPlaneOutline } from "react-icons/ti";
@@ -44,11 +44,15 @@ const PawnButton = ({
       disabled={disabled}
       aria-label={`Select ${pawnName} pawn`}
     >
-      {pawnName === "Robot" && <TbRobot className="text-2xl sm:text-3xl text-gray-700" />}
+      {pawnName === "Robot" && (
+        <TbRobot className="text-2xl sm:text-3xl text-gray-700" />
+      )}
       {pawnName === "Plane" && (
         <TiPlaneOutline className="text-2xl sm:text-3xl text-gray-700" />
       )}
-      {pawnName === "Cat" && <FaCat className="text-2xl sm:text-3xl text-gray-700" />}
+      {pawnName === "Cat" && (
+        <FaCat className="text-2xl sm:text-3xl text-gray-700" />
+      )}
       {pawnName === "Planet" && (
         <IoMdPlanet className="text-2xl sm:text-3xl text-gray-700" />
       )}

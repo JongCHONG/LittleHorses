@@ -95,7 +95,7 @@ const PlayersOrderForm = ({
     <div className="w-full max-w-lg mx-auto bg-white p-6 sm:p-8 rounded-xl shadow-lg">
       <div className="text-center mb-6">
         <h1 className="text-2xl sm:text-3xl font-bold text-gray-800 mb-2">
-          🎲 Determine Play Order
+          🎲 Determine Play Order 🎲
         </h1>
         <p className="text-gray-600 text-sm sm:text-base">
           Each player rolls to determine turn order

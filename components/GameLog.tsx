@@ -1,6 +1,8 @@
 "use client";
 
 import { useRef, useEffect } from "react";
+import { v4 as uuidv4 } from "uuid";
+
 import { useGameLog } from "../utils/contexts/GameLogContext";
 
 interface GameLogProps {
@@ -21,26 +23,25 @@ const GameLog = ({ height }: GameLogProps) => {
   }, [gameLog]);
 
   return (
-    <div className="w-full lg:w-80 bg-gray-100 p-3 sm:p-4 rounded-lg shadow-md flex flex-col h-full max-h-[600px]">
+    <div className="w-full lg:w-100 bg-gray-100 p-3 sm:p-4 rounded-lg shadow-md flex flex-col h-full max-h-[600px]">
       <h2 className="text-lg font-bold mb-3 text-center sm:text-left">
         Game Log
       </h2>
 
       <div
         ref={logContainerRef}
-        className="flex-1 overflow-y-auto p-3 rounded border bg-white min-h-0 scrollbar-thin"
-        style={
-          height
-            ? { height: `${height}px`, maxHeight: "500px" }
-            : { maxHeight: "500px" }
-        }
+        className="flex-1 overflow-y-auto p-3 rounded border bg-white scrollbar-thin"
+        style={{
+          minHeight: height ? `${height}px` : "200px",
+          maxHeight: height ? `${height}px` : "500px",
+        }}
       >
         {gameLog?.length === 0 ? (
           <p className="text-gray-500 italic text-center">No actions yet...</p>
         ) : (
-          gameLog?.map((log, index) => (
+          gameLog?.map((log) => (
             <div
-              key={index}
+              key={uuidv4()}
               className={`mb-2 p-2 rounded text-xs sm:text-sm ${
                 log.includes("WINS")
                   ? "bg-green-100 text-green-800 font-bold"

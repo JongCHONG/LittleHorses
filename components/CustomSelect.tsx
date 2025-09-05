@@ -19,25 +19,25 @@ interface CustomSelectProps {
 const colorOptions: ColorOption[] = [
   {
     value: "tan",
-    label: "tan",
+    label: "Tan",
     isDisabled: false,
     color: "#DAB785",
   },
   {
     value: "burntSienna",
-    label: "burntSienna",
+    label: "Burnt Sienna",
     isDisabled: false,
     color: "#C65D4D",
   },
   {
     value: "cambridgeBlue",
-    label: "cambridgeBlue",
+    label: "Cambridge Blue",
     isDisabled: false,
     color: "#70A288",
   },
   {
     value: "prussianBlue",
-    label: "prussianBlue",
+    label: "Prussian Blue",
     isDisabled: false,
     color: "#1969a1ff",
   },

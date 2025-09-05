@@ -1,12 +1,15 @@
-'use client'
+"use client";
 
 import { useState } from "react";
 import { useDispatch } from "react-redux";
+
 import { setNumOfPawns } from "../utils/slices/numOfPawnsSlice";
 import type { Player } from "../utils/intefaces/player";
 import { addPlayer } from "../utils/slices/playersSlice";
-import GameLog from "./GameLog";
 import { useGameLog } from "../utils/contexts/GameLogContext";
+
+import GameLog from "./GameLog";
+import Button from "./Button";
 
 interface NumberOfPlayersFormProps {
   numPlayers: number;
@@ -14,7 +17,7 @@ interface NumberOfPlayersFormProps {
   handleNumPlayersSubmit: (num: number) => void;
 }
 
-const NumberOfPlayersPawnsForm = ({
+const GameSettingsForm = ({
   numPlayers,
   setNumPlayers,
   handleNumPlayersSubmit,
@@ -74,9 +77,8 @@ const NumberOfPlayersPawnsForm = ({
             required
           />
         </label>
-        <button
+        <Button
           type="submit"
-          className="bg-indigo-600 text-white px-4 py-2 rounded"
           onClick={() => {
             addLog(
               `Game started with ${numPlayers} player(s) and ${numPawns} pawn(s) each.`
@@ -84,11 +86,11 @@ const NumberOfPlayersPawnsForm = ({
           }}
         >
           Start Game
-        </button>
+        </Button>
       </form>
       <GameLog height={520} />
     </div>
   );
 };
 
-export default NumberOfPlayersPawnsForm;
+export default GameSettingsForm;

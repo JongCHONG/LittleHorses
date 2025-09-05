@@ -1,7 +1,10 @@
 "use client";
 
 import { useRouter } from "next/navigation";
+import { v4 as uuidv4 } from "uuid";
+
 import Button from "../../components/Button";
+import RulesSection from "components/RulesSection";
 
 const Rules = () => {
   const router = useRouter();
@@ -16,8 +19,8 @@ const Rules = () => {
       rules: [
         "To move a piece out of the stable and onto the first square of the track, you must roll a **6** on the dice.",
         "If you roll a 6, you can bring out a piece **and** roll the dice again.",
-        "As long as the player keeps rolling 6s, they may continue to play."
-      ]
+        "As long as the player keeps rolling 6s, they may continue to play.",
+      ],
     },
     {
       title: "Regular Movement",
@@ -27,8 +30,8 @@ const Rules = () => {
       borderColor: "border-green-200",
       rules: [
         "On each turn, the player rolls the dice and moves one of their pieces forward by the number shown.",
-        "Pieces move along the path marked by their color: each player has their own starting square and follows the common outer track."
-      ]
+        "Pieces move along the path marked by their color: each player has their own starting square and follows the common outer track.",
+      ],
     },
     {
       title: "Capturing an Opponent's Piece",
@@ -38,8 +41,8 @@ const Rules = () => {
       borderColor: "border-red-200",
       rules: [
         "If a piece lands on the same square as another (except for the finish or stable squares), the piece already there is **captured**.",
-        "Captured pieces are sent back to their original stable and must roll a 6 again to come out."
-      ]
+        "Captured pieces are sent back to their original stable and must roll a 6 again to come out.",
+      ],
     },
     {
       title: "Final Stretch",
@@ -50,8 +53,8 @@ const Rules = () => {
       rules: [
         "When a piece has completed a full lap, it turns onto its **final stretch** (the colored path leading to the center).",
         "There, it advances one square at a time according to dice rolls.",
-        "To reach the last finish square, you must roll exactly the number of spaces remaining: if you roll too high, the piece does not move."
-      ]
+        "To reach the last finish square, you must roll exactly the number of spaces remaining: if you roll too high, the piece does not move.",
+      ],
     },
     {
       title: "Winning the Game",
@@ -61,16 +64,15 @@ const Rules = () => {
       borderColor: "border-purple-200",
       rules: [
         "The winner is the first to bring **all their pieces** to the central finish square of their color.",
-        "Victory requires strategy, luck, and careful planning of your moves!"
-      ]
-    }
+        "Victory requires strategy, luck, and careful planning of your moves!",
+      ],
+    },
   ];
 
   return (
     <div className="min-h-screen-safe bg-gradient-to-br from-indigo-50 via-white to-purple-50">
       <div className="container mx-auto px-4 py-8 sm:py-12">
         <div className="max-w-4xl mx-auto">
-
           <div className="text-center mb-8 sm:mb-12">
             <div className="inline-block mb-6">
               <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold bg-gradient-to-r from-indigo-600 via-purple-600 to-pink-600 bg-clip-text text-transparent">
@@ -79,42 +81,14 @@ const Rules = () => {
               <div className="h-1 bg-gradient-to-r from-indigo-400 to-purple-400 rounded-full mt-2"></div>
             </div>
             <p className="text-lg text-gray-600 max-w-2xl mx-auto">
-              Master the art of Little Horses with these comprehensive rules and strategies
+              Master the art of Little Horses with these comprehensive rules and
+              strategies
             </p>
           </div>
 
           <div className="space-y-6 sm:space-y-8 mb-12">
-            {rulesSections.map((section, index) => (
-              <div
-                key={index}
-                className={`${section.bgColor} ${section.borderColor} border-2 rounded-2xl p-6 sm:p-8 shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-[1.02]`}
-              >
-                <div className="flex items-center mb-4">
-                  <div className={`text-3xl sm:text-4xl mr-4 p-3 rounded-full bg-gradient-to-r ${section.color} bg-clip-text`}>
-                    {section.icon}
-                  </div>
-                  <h2 className={`text-xl sm:text-2xl font-bold bg-gradient-to-r ${section.color} bg-clip-text text-transparent`}>
-                    {section.title}
-                  </h2>
-                </div>
-                
-                <div className="space-y-3">
-                  {section.rules.map((rule, ruleIndex) => (
-                    <div key={ruleIndex} className="flex items-start">
-                      <div className={`w-2 h-2 rounded-full bg-gradient-to-r ${section.color} mt-2 mr-3 flex-shrink-0`}></div>
-                      <p className="text-gray-700 leading-relaxed">
-                        {rule.split('**').map((part, partIndex) => (
-                          partIndex % 2 === 0 ? (
-                            <span key={partIndex}>{part}</span>
-                          ) : (
-                            <strong key={partIndex} className="font-semibold text-gray-900">{part}</strong>
-                          )
-                        ))}
-                      </p>
-                    </div>
-                  ))}
-                </div>
-              </div>
+            {rulesSections.map((section) => (
+              <RulesSection key={uuidv4()} section={section} />
             ))}
           </div>
 
@@ -125,42 +99,51 @@ const Rules = () => {
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div className="flex items-start">
                 <span className="text-lg mr-2">🎯</span>
-                <span className="text-amber-700">Focus on getting all pieces out before advancing too far</span>
+                <span className="text-amber-700">
+                  Focus on getting all pieces out before advancing too far
+                </span>
               </div>
               <div className="flex items-start">
                 <span className="text-lg mr-2">🛡️</span>
-                <span className="text-amber-700">Use blocking strategies to slow opponents</span>
+                <span className="text-amber-700">
+                  Use blocking strategies to slow opponents
+                </span>
               </div>
               <div className="flex items-start">
                 <span className="text-lg mr-2">🎲</span>
-                <span className="text-amber-700">Count spaces carefully in the final stretch</span>
+                <span className="text-amber-700">
+                  Count spaces carefully in the final stretch
+                </span>
               </div>
               <div className="flex items-start">
                 <span className="text-lg mr-2">⚡</span>
-                <span className="text-amber-700">Keep rolling those 6s for extra turns!</span>
+                <span className="text-amber-700">
+                  Keep rolling those 6s for extra turns!
+                </span>
               </div>
             </div>
           </div>
 
           <div className="text-center">
             <div className="space-y-4 sm:space-y-0 sm:flex sm:justify-center sm:space-x-4">
-              <Button 
+              <Button
                 onClick={() => router.push("/")}
                 className="w-full sm:w-auto min-w-[140px] bg-gray-500 hover:bg-gray-600 text-white"
               >
                 🏠 Home
               </Button>
-              
-              <Button 
+
+              <Button
                 onClick={() => router.push("/game")}
                 className="w-full sm:w-auto min-w-[140px] bg-gradient-to-r from-green-500 to-emerald-500 hover:from-green-600 hover:to-emerald-600 text-white shadow-lg"
               >
                 🎮 Start Playing
               </Button>
             </div>
-            
+
             <p className="mt-6 text-sm text-gray-500">
-              Ready to put these rules into practice? Start a new game and have fun! 🎉
+              Ready to put these rules into practice? Start a new game and have
+              fun! 🎉
             </p>
           </div>
         </div>

@@ -4,7 +4,7 @@ import { useEffect, useState, useCallback } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
 import PlayerForm from "./PlayerForm";
-import NumberOfPlayersPawnsForm from "./GameSettingsForm";
+import GameSettingsForm from "./GameSettingsForm";
 
 import {
   setPawnActualPosition,
@@ -17,10 +17,9 @@ import {
 } from "../utils/slices/currentSlice";
 import { getRoute, getStartPosition } from "../utils/helpers";
 import PlayersOrderForm from "./PlayersOrderForm";
-import { colorMap } from "../utils/colorMap";
 import { useGameLog } from "../utils/contexts/GameLogContext";
-import GameLog from "./GameLog";
-import Button from "./Button";
+
+import GameControls from "./GameControls";
 
 const DashBoard = () => {
   const dispatch = useDispatch();
@@ -191,7 +190,7 @@ const DashBoard = () => {
     <div className="h-full flex flex-col p-3 sm:p-5">
       {numOfPawn === 0 ? (
         <div className="flex-1 flex items-center justify-center">
-          <NumberOfPlayersPawnsForm
+          <GameSettingsForm
             numPlayers={numPlayers ?? 0}
             setNumPlayers={setNumPlayers}
             handleNumPlayersSubmit={handleNumPlayersSubmit}
@@ -206,51 +205,15 @@ const DashBoard = () => {
           <PlayerForm numPlayers={numPlayers ?? 0} handleReset={resetGame} />
         </div>
       ) : (
-        <div className="h-full flex flex-col">
-          <div
-            className="rounded-lg shadow-md p-4 sm:p-6 mb-4"
-            style={{
-              backgroundColor:
-                colorMap[currentPlayer?.color ?? "none"] || "white",
-              transition: "background-color 0.3s ease",
-            }}
-          >
-            <h1 className="text-xl sm:text-2xl font-bold mb-4">
-              Game Dashboard
-            </h1>
-
-            <div className="mb-4">
-              <h2 className="text-lg font-semibold mb-2">
-                Ordre des joueurs :
-              </h2>
-              <div className="grid grid-cols-2 sm:grid-cols-1 gap-1">
-                {playersOrder.map((playerIdx: number) => (
-                  <div
-                    key={playerIdx}
-                    className={`px-2 py-1 rounded text-sm ${
-                      playerIdx === currentPlayerIndex
-                        ? "bg-indigo-100 font-bold text-indigo-700"
-                        : "text-gray-600"
-                    }`}
-                  >
-                    {players[playerIdx]?.name || `Joueur ${playerIdx + 1}`}
-                  </div>
-                ))}
-              </div>
-            </div>
-
-            <div className="flex flex-col sm:flex-row gap-2 sm:gap-4 mb-4">
-              <Button onClick={handleRollDice}>Roll Dice: {diceRoll}</Button>
-              <Button color="red" onClick={resetGame}>
-                Restart
-              </Button>
-            </div>
-          </div>
-
-          <div className="flex-1 min-h-0">
-            <GameLog />
-          </div>
-        </div>
+        <GameControls
+          currentPlayer={currentPlayer}
+          playersOrder={playersOrder}
+          diceRoll={diceRoll}
+          onDiceRoll={handleRollDice}
+          onRestart={resetGame}
+          players={players}
+          currentPlayerIndex={currentPlayerIndex}
+        />
       )}
     </div>
   );

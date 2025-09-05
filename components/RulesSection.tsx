@@ -11,7 +11,7 @@ interface RulesSectionProps {
   };
 }
 
-const RulesSection: React.FC<RulesSectionProps> = ({ section }) => {
+const RulesSection = ({ section }: RulesSectionProps) => {
   return (
     <div
       className={`${section.bgColor} ${section.borderColor} border-2 rounded-2xl p-6 sm:p-8 shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-[1.02]`}

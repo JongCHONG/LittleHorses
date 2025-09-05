@@ -1,5 +1,6 @@
-'use client'
+"use client";
 
+import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 
 import BoardElement from "./BoardElement";
@@ -29,6 +30,7 @@ const Board = ({
   prussianBlueCirclePositions,
   prussianBlueEndZones,
 }: BoardProps) => {
+  const [showBoard, setShowBoard] = useState(true);
   const players = useSelector((state: { players: Player[] }) => state.players);
   const tanPlayer = players.find((player) => player.color === "tan");
   const burntSiennaPlayer = players.find(
@@ -41,9 +43,20 @@ const Board = ({
     (player) => player.color === "prussianBlue"
   );
 
+  useEffect(() => {
+    const hasDefaultPlayer = players.some((player) =>
+      player.name?.toLowerCase().includes("player")
+    );
+    setShowBoard(!hasDefaultPlayer && players.length > 0);
+  }, [players]);
+
   return (
-    <div className="flex flex-col lg:flex-row min-h-screen bg-gray-50">
-      <div className="flex-1 flex justify-center items-center p-2 sm:p-4">
+    <div className="flex flex-col lg:flex-row min-h-screen bg-gray-50 items-center justify-center lg:justify-start">
+      <div
+        className={`${
+          !showBoard && "hidden"
+        } lg:flex flex-1 justify-center items-center p-2 sm:p-4`}
+      >
         <div
           className="relative bg-amber-50 rounded-lg shadow-lg"
           style={{
@@ -76,7 +89,7 @@ const Board = ({
             name="prussianBlue"
             player={prussianBluePlayer}
           />
-          
+
           <div
             className="absolute w-8 h-8 sm:w-10 sm:h-10 md:w-12 md:h-12 rounded-full border-2 border-white"
             style={{
@@ -88,7 +101,7 @@ const Board = ({
           />
         </div>
       </div>
-      
+
       <div className="w-full lg:w-96 xl:w-1/3 lg:max-w-md">
         <DashBoard />
       </div>

@@ -223,7 +223,7 @@ const PlayerForm = ({
       </form>
 
       <div className="mt-6">
-        <GameLog height={window.innerHeight > 800 ? 400 : 300} />
+        <GameLog height={200} />
       </div>
     </div>
   );

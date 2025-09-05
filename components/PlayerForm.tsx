@@ -19,7 +19,6 @@ import Button from "./Button";
 interface PlayerFormProps {
   numPlayers: number;
   handleReset?: () => void;
-  onAllPlayersRegistered?: () => void;
 }
 
 const selectPlayers = (state: RootState) => state.players;
@@ -38,7 +37,6 @@ const selectTakenColors = createSelector([selectPlayers], (players) =>
 const PlayerForm = ({
   numPlayers,
   handleReset,
-  onAllPlayersRegistered,
 }: PlayerFormProps) => {
   const dispatch = useDispatch();
   const { addLog } = useGameLog();
@@ -107,7 +105,6 @@ const PlayerForm = ({
           pawnName: "",
         });
       } else {
-        if (onAllPlayersRegistered) onAllPlayersRegistered();
         dispatch(setCurrentPlayerIndex(playersOrder[0]));
       }
     },
@@ -117,7 +114,6 @@ const PlayerForm = ({
       numOfPawnsPerTeam,
       playersOrder,
       currentPlayerIndex,
-      onAllPlayersRegistered,
       addLog,
     ]
   );

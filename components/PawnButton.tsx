@@ -29,28 +29,28 @@ const PawnButton = ({
           pawnName: tempPlayer.pawnName === pawnName ? "" : pawnName,
         })
       }
-      className={`flex items-center px-2 py-1 rounded transition border
+      className={`flex items-center justify-center p-2 sm:px-3 sm:py-2 rounded-lg transition-all duration-200 border-2 min-h-[48px] min-w-[48px] sm:min-h-[56px] sm:min-w-[56px]
         ${
           tempPlayer.pawnName === pawnName
-            ? "bg-indigo-200 border-indigo-500"
-            : "bg-[#fafaf0] border-transparent"
+            ? "bg-indigo-200 border-indigo-500 shadow-md scale-105"
+            : "bg-white border-gray-300 hover:border-indigo-300 shadow-sm"
         }
         ${
           !disabled
-            ? "hover:bg-indigo-100 cursor-pointer"
-            : "cursor-not-allowed"
+            ? "hover:bg-indigo-100 hover:scale-105 active:scale-95 cursor-pointer"
+            : "cursor-not-allowed opacity-50"
         }
       `}
-      style={{ opacity: disabled ? 0.5 : 1 }}
       disabled={disabled}
+      aria-label={`Select ${pawnName} pawn`}
     >
-      {pawnName === "Robot" && <TbRobot className="inline-block text-3xl" />}
+      {pawnName === "Robot" && <TbRobot className="text-2xl sm:text-3xl text-gray-700" />}
       {pawnName === "Plane" && (
-        <TiPlaneOutline className="inline-block text-3xl" />
+        <TiPlaneOutline className="text-2xl sm:text-3xl text-gray-700" />
       )}
-      {pawnName === "Cat" && <FaCat className="inline-block text-3xl" />}
+      {pawnName === "Cat" && <FaCat className="text-2xl sm:text-3xl text-gray-700" />}
       {pawnName === "Planet" && (
-        <IoMdPlanet className="inline-block text-3xl" />
+        <IoMdPlanet className="text-2xl sm:text-3xl text-gray-700" />
       )}
     </button>
   );

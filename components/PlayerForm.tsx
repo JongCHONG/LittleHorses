@@ -119,12 +119,13 @@ const PlayerForm = ({
   );
 
   return (
-    <div className="bg-white p-4 rounded shadow-md">
-      <h1 className="text-2xl font-bold mb-4">{`Players Registration (${
+    <div className="w-full max-w-2xl mx-auto bg-white p-4 sm:p-6 rounded-lg shadow-md">
+      <h1 className="text-xl sm:text-2xl font-bold mb-4 text-center">{`Players Registration (${
         playersOrder.indexOf(currentPlayerIndex) + 1
       }/${numPlayers})`}</h1>
-      <form onSubmit={handleSubmit} className="mb-4">
-        <div className="mb-2 mt-5">
+      
+      <form onSubmit={handleSubmit} className="space-y-4 mb-6">
+        <div>
           <label htmlFor="name" className="relative block">
             <input
               type="text"
@@ -134,16 +135,16 @@ const PlayerForm = ({
                 setTempPlayer({ ...tempPlayer, name: e.target.value })
               }
               placeholder=" "
-              className="peer mt-0.5 w-full rounded border border-gray-300 shadow-sm sm:text-sm h-10 px-3"
+              className="peer w-full rounded-lg border border-gray-300 shadow-sm text-sm sm:text-base h-12 px-4 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 transition-all"
               required
             />
             <span
               className={`
               pointer-events-none
-              absolute left-3
+              absolute left-4
               bg-white
-              px-1
-              text-base
+              px-2
+              text-sm sm:text-base
               font-medium
               text-gray-700
               transition-all
@@ -151,69 +152,79 @@ const PlayerForm = ({
               ease-in-out
               ${
                 tempPlayer.name
-                  ? "-top-3 text-xs"
-                  : "top-2 peer-placeholder-shown:top-2 peer-placeholder-shown:text-base"
+                  ? "-top-2 text-xs sm:text-sm text-indigo-600"
+                  : "top-3 peer-placeholder-shown:top-3 peer-placeholder-shown:text-base"
               }
-              peer-focus:-top-3 peer-focus:text-xs
+              peer-focus:-top-2 peer-focus:text-xs peer-focus:sm:text-sm peer-focus:text-indigo-600
               `}
             >
               Name
             </span>
           </label>
         </div>
-        <div className="mb-2">
+
+        <div>
           <CustomSelect
             tempPlayer={tempPlayer}
             setTempPlayer={setTempPlayer}
             takenColors={takenColors}
           />
         </div>
-        <div className="mb-1 flex items-center gap-2">
-          <label
-            htmlFor="pawnName"
-            className="text-sm font-medium text-gray-700"
-          >
-            Choose your pawn :
+
+        <div>
+          <label className="block text-sm sm:text-base font-medium text-gray-700 mb-3">
+            Choose your pawn:
           </label>
-          <PawnButton
-            pawnName="Robot"
-            tempPlayer={tempPlayer}
-            setTempPlayer={setTempPlayer}
-            disabled={takenPawnNames.includes("Robot")}
-          />
-          <PawnButton
-            pawnName="Cat"
-            tempPlayer={tempPlayer}
-            setTempPlayer={setTempPlayer}
-            disabled={takenPawnNames.includes("Cat")}
-          />
-          <PawnButton
-            pawnName="Plane"
-            tempPlayer={tempPlayer}
-            setTempPlayer={setTempPlayer}
-            disabled={takenPawnNames.includes("Plane")}
-          />
-          <PawnButton
-            pawnName="Planet"
-            tempPlayer={tempPlayer}
-            setTempPlayer={setTempPlayer}
-            disabled={takenPawnNames.includes("Planet")}
-          />
+          <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+            <PawnButton
+              pawnName="Robot"
+              tempPlayer={tempPlayer}
+              setTempPlayer={setTempPlayer}
+              disabled={takenPawnNames.includes("Robot")}
+            />
+            <PawnButton
+              pawnName="Cat"
+              tempPlayer={tempPlayer}
+              setTempPlayer={setTempPlayer}
+              disabled={takenPawnNames.includes("Cat")}
+            />
+            <PawnButton
+              pawnName="Plane"
+              tempPlayer={tempPlayer}
+              setTempPlayer={setTempPlayer}
+              disabled={takenPawnNames.includes("Plane")}
+            />
+            <PawnButton
+              pawnName="Planet"
+              tempPlayer={tempPlayer}
+              setTempPlayer={setTempPlayer}
+              disabled={takenPawnNames.includes("Planet")}
+            />
+          </div>
         </div>
-        <Button
-          disabled={!isFormValid}
-          type="submit"
-        >
-          Register
-        </Button>
-        <Button
-          onClick={handleReset}
-          color="red"
-        >
-          Restart
-        </Button>
+
+        <div className="flex flex-col sm:flex-row gap-3 pt-4">
+          <Button
+            disabled={!isFormValid}
+            type="submit"
+            className="flex-1"
+          >
+            Register Player
+          </Button>
+          <Button
+            onClick={handleReset}
+            color="red"
+            type="button"
+            className="flex-1 sm:flex-none"
+          >
+            Restart Game
+          </Button>
+        </div>
       </form>
-      <GameLog height={440} />
+
+      <div className="mt-6">
+        <GameLog height={window.innerHeight > 800 ? 400 : 300} />
+      </div>
     </div>
   );
 };

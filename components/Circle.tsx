@@ -7,13 +7,18 @@ interface CircleProps {
 }
 
 const Circle = ({ color, x, y }: CircleProps) => {
+  const circleSize = `min(50px, 5.88vw, 5.88vh)`;
+  
   return (
     <div
-      className="absolute w-[50px] h-[50px] rounded-full border-2 border-white box-border"
+      className="absolute rounded-full border-2 border-white transition-all duration-200 hover:scale-110"
       style={{
-        left: x,
-        top: y,
+        width: circleSize,
+        height: circleSize,
+        left: `min(${x}px, ${(x / 850) * 100}%)`,
+        top: `min(${y}px, ${(y / 850) * 100}%)`,
         backgroundColor: color,
+        boxSizing: 'border-box',
       }}
     />
   );

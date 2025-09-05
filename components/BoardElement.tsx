@@ -1,11 +1,11 @@
 'use client'
 
 import React, { type CSSProperties } from "react";
-import { v4 as uuidv4 } from "uuid";
 import { TbRobot } from "react-icons/tb";
 import { TiPlaneOutline } from "react-icons/ti";
 import { FaCat } from "react-icons/fa";
 import { IoMdPlanet } from "react-icons/io";
+import { v4 as uuidv4 } from "uuid";
 
 import EndZone from "./EndZone";
 import Circle from "./Circle";
@@ -72,10 +72,10 @@ const BoardElement = ({
   return (
     <>
       <div
-        className="absolute flex flex-col items-center justify-center text-[whitesmoke]"
+        className="absolute flex flex-col items-center justify-center text-white p-2 sm:p-3"
         style={{
-          width: 350,
-          height: 350,
+          width: "min(350px, 41.18%)", 
+          height: "min(350px, 41.18%)",
           background: cssStyles[name].color,
           top: cssStyles[name].top,
           right: cssStyles[name].right,
@@ -84,34 +84,40 @@ const BoardElement = ({
           position: cssStyles[name].position as CSSProperties["position"],
         }}
       >
-        <h2 className="mb-1">{TileNames[name]}</h2>
+        <h2 className="mb-1 text-sm sm:text-base md:text-lg font-semibold text-center">
+          {TileNames[name]}
+        </h2>
         {player && (
           <>
-            <p>Player : {player?.name}</p>
-            <p>Ready : {player?.isReady ? "Yes" : "No"}</p>
-            <p>Score : {player?.score || 0}</p>
-            <div className="flex gap-1 items-center mt-2">
-              {player?.score === numOfPawns
-                ? "Winner!"
-                : player?.pawns?.filter((p) => !p.isFinished).length === 1
-                ? "Last pawn !"
-                : "Pawns :"}
-              {Array.from({
-                length: Math.max(
-                  (player?.pawns?.filter((p) => !p.isFinished).length ?? 0) - 1,
-                  0
-                ),
-              }).map((_, idx) =>
-                player?.pawnName === "Robot" ? (
-                  <TbRobot key={idx} size={28} />
-                ) : player?.pawnName === "Plane" ? (
-                  <TiPlaneOutline key={idx} size={28} />
-                ) : player?.pawnName === "Cat" ? (
-                  <FaCat key={idx} size={28} />
-                ) : player?.pawnName === "Planet" ? (
-                  <IoMdPlanet key={idx} size={28} />
-                ) : null
-              )}
+            <p className="text-xs sm:text-sm mb-1">Player : {player?.name}</p>
+            <p className="text-xs sm:text-sm mb-1">Ready : {player?.isReady ? "Yes" : "No"}</p>
+            <p className="text-xs sm:text-sm mb-2">Score : {player?.score || 0}</p>
+            <div className="flex gap-1 items-center mt-1 flex-wrap justify-center">
+              <span className="text-xs sm:text-sm">
+                {player?.score === numOfPawns
+                  ? "🏆 Winner!"
+                  : player?.pawns?.filter((p) => !p.isFinished).length === 1
+                  ? "🔥 Last pawn!"
+                  : "Pawns :"}
+              </span>
+              <div className="flex gap-1 flex-wrap">
+                {Array.from({
+                  length: Math.max(
+                    (player?.pawns?.filter((p) => !p.isFinished).length ?? 0) - 1,
+                    0
+                  ),
+                }).map((_, idx) =>
+                  player?.pawnName === "Robot" ? (
+                    <TbRobot key={idx} className="w-4 h-4 sm:w-6 sm:h-6 md:w-7 md:h-7" />
+                  ) : player?.pawnName === "Plane" ? (
+                    <TiPlaneOutline key={idx} className="w-4 h-4 sm:w-6 sm:h-6 md:w-7 md:h-7" />
+                  ) : player?.pawnName === "Cat" ? (
+                    <FaCat key={idx} className="w-4 h-4 sm:w-6 sm:h-6 md:w-7 md:h-7" />
+                  ) : player?.pawnName === "Planet" ? (
+                    <IoMdPlanet key={idx} className="w-4 h-4 sm:w-6 sm:h-6 md:w-7 md:h-7" />
+                  ) : null
+                )}
+              </div>
             </div>
           </>
         )}

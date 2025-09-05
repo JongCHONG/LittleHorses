@@ -36,7 +36,6 @@ const DashBoard = () => {
     player.name?.toLowerCase().includes("player")
   );
 
-
   const currentPlayerIndex = useSelector(
     (state: { current: { currentPlayerIndex: number } }) =>
       state.current.currentPlayerIndex
@@ -57,6 +56,10 @@ const DashBoard = () => {
           pawns: currentPlayer.pawns,
         })
       );
+    }
+    if (players) {
+      const numPlayers = players.length;
+      setNumPlayers(numPlayers);
     }
   }, [currentPlayerIndex, currentPlayer?.pawns, dispatch]);
 
@@ -185,59 +188,69 @@ const DashBoard = () => {
   }, [dispatch, clearLog]);
 
   return (
-    <div className="p-5 flex align-items-center">
+    <div className="h-full flex flex-col p-3 sm:p-5">
       {numOfPawn === 0 ? (
-        <NumberOfPlayersPawnsForm
-          numPlayers={numPlayers ?? 0}
-          setNumPlayers={setNumPlayers}
-          handleNumPlayersSubmit={handleNumPlayersSubmit}
-        />
+        <div className="flex-1 flex items-center justify-center">
+          <NumberOfPlayersPawnsForm
+            numPlayers={numPlayers ?? 0}
+            setNumPlayers={setNumPlayers}
+            handleNumPlayersSubmit={handleNumPlayersSubmit}
+          />
+        </div>
       ) : numOfPawn !== 0 && playersOrder.length === 0 ? (
-        <PlayersOrderForm
-          handleReset={resetGame}
-        />
+        <div className="flex-1 flex items-center justify-center">
+          <PlayersOrderForm handleReset={resetGame} />
+        </div>
       ) : hasDefaultPlayer ? (
-        <PlayerForm
-          numPlayers={numPlayers ?? 0}
-          handleReset={resetGame}
-        />
+        <div className="flex-1 flex items-center justify-center">
+          <PlayerForm numPlayers={numPlayers ?? 0} handleReset={resetGame} />
+        </div>
       ) : (
-        <>
+        <div className="h-full flex flex-col">
           <div
-            className="p-4 rounded shadow-md"
+            className="rounded-lg shadow-md p-4 sm:p-6 mb-4"
             style={{
               backgroundColor:
                 colorMap[currentPlayer?.color ?? "none"] || "white",
               transition: "background-color 0.3s ease",
             }}
           >
-            <h1 className="text-2xl font-bold mb-4">Game Dashboard</h1>
+            <h1 className="text-xl sm:text-2xl font-bold mb-4">
+              Game Dashboard
+            </h1>
+
             <div className="mb-4">
               <h2 className="text-lg font-semibold mb-2">
                 Ordre des joueurs :
               </h2>
-              <ol className="list-decimal list-inside">
+              <div className="grid grid-cols-2 sm:grid-cols-1 gap-1">
                 {playersOrder.map((playerIdx: number) => (
-                  <li
+                  <div
                     key={playerIdx}
-                    className={
+                    className={`px-2 py-1 rounded text-sm ${
                       playerIdx === currentPlayerIndex
-                        ? "font-bold text-indigo-700"
-                        : ""
-                    }
+                        ? "bg-indigo-100 font-bold text-indigo-700"
+                        : "text-gray-600"
+                    }`}
                   >
                     {players[playerIdx]?.name || `Joueur ${playerIdx + 1}`}
-                  </li>
+                  </div>
                 ))}
-              </ol>
+              </div>
             </div>
-            <Button onClick={handleRollDice}>Roll Dice: {diceRoll}</Button>
-            <Button color="red" onClick={resetGame}>
-              Restart
-            </Button>
-            <GameLog height={500 - (numPlayers ?? 0) * 10} />
+
+            <div className="flex flex-col sm:flex-row gap-2 sm:gap-4 mb-4">
+              <Button onClick={handleRollDice}>Roll Dice: {diceRoll}</Button>
+              <Button color="red" onClick={resetGame}>
+                Restart
+              </Button>
+            </div>
           </div>
-        </>
+
+          <div className="flex-1 min-h-0">
+            <GameLog />
+          </div>
+        </div>
       )}
     </div>
   );

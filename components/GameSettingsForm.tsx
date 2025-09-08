@@ -83,7 +83,7 @@ const GameSettingsForm = ({
             <SelectionGrid
               selected={numPawns ?? 0}
               onSelect={setNumPawns}
-              selectedColor="green"
+              selectedColor="indigo"
             />
           </div>
         </div>

@@ -1,7 +1,8 @@
-'use client'
+"use client";
 
 import Select, { type StylesConfig, type GroupBase } from "react-select";
 import type { Player } from "../utils/intefaces/player";
+import { colorMap } from "utils/constants/colorMap";
 
 interface ColorOption {
   value: string;
@@ -21,25 +22,25 @@ const colorOptions: ColorOption[] = [
     value: "tan",
     label: "Tan",
     isDisabled: false,
-    color: "#DAB785",
+    color: colorMap.tan,
   },
   {
     value: "burntSienna",
     label: "Burnt Sienna",
     isDisabled: false,
-    color: "#C65D4D",
+    color: colorMap.burntSienna,
   },
   {
     value: "cambridgeBlue",
     label: "Cambridge Blue",
     isDisabled: false,
-    color: "#70A288",
+    color: colorMap.cambridgeBlue,
   },
   {
     value: "prussianBlue",
     label: "Prussian Blue",
     isDisabled: false,
-    color: "#1969a1ff",
+    color: colorMap.prussianBlue,
   },
 ];
 
@@ -60,62 +61,65 @@ const CustomSelect = ({
   > = {
     control: (provided, state) => ({
       ...provided,
-      minHeight: '48px',
-      borderWidth: '2px',
-      borderRadius: '8px',
-      borderColor: state.isFocused ? '#6366f1' : '#d1d5db',
-      boxShadow: state.isFocused ? '0 0 0 2px rgba(99, 102, 241, 0.2)' : 'none',
-      fontSize: window.innerWidth < 640 ? '16px' : '14px',
-      '&:hover': {
-        borderColor: '#6366f1',
+      minHeight: "48px",
+      borderWidth: "2px",
+      borderRadius: "8px",
+      borderColor: state.isFocused ? "#6366f1" : "#d1d5db",
+      boxShadow: state.isFocused ? "0 0 0 2px rgba(99, 102, 241, 0.2)" : "none",
+      fontSize: window.innerWidth < 640 ? "16px" : "14px",
+      "&:hover": {
+        borderColor: "#6366f1",
       },
-      transition: 'all 0.2s ease-in-out',
+      transition: "all 0.2s ease-in-out",
     }),
     option: (provided, state) => ({
       ...provided,
-      padding: '12px 16px',
-      color: state.isDisabled ? '#9ca3af' : state.data.color,
-      backgroundColor: state.isSelected 
-        ? 'rgba(99, 102, 241, 0.1)' 
-        : state.isFocused 
-        ? 'rgba(99, 102, 241, 0.05)' 
-        : state.isDisabled 
-        ? '#f9fafb' 
-        : 'white',
+      padding: "12px 16px",
+      color: state.isDisabled ? "#9ca3af" : state.data.color,
+      backgroundColor: state.isSelected
+        ? "rgba(99, 102, 241, 0.1)"
+        : state.isFocused
+        ? "rgba(99, 102, 241, 0.05)"
+        : state.isDisabled
+        ? "#f9fafb"
+        : "white",
       textDecoration: state.isDisabled ? "line-through" : "none",
       cursor: state.isDisabled ? "not-allowed" : "pointer",
-      fontWeight: state.isSelected ? 'bold' : 'normal',
-      fontSize: window.innerWidth < 640 ? '16px' : '14px',
-      '&:before': state.isSelected ? {
-        color: '#6366f1',
-        fontWeight: 'bold',
-      } : {},
+      fontWeight: state.isSelected ? "bold" : "normal",
+      fontSize: window.innerWidth < 640 ? "16px" : "14px",
+      "&:before": state.isSelected
+        ? {
+            color: "#6366f1",
+            fontWeight: "bold",
+          }
+        : {},
     }),
     singleValue: (provided, state) => ({
       ...provided,
       color: state.data.color,
-      fontWeight: 'bold',
-      fontSize: window.innerWidth < 640 ? '16px' : '14px',
+      fontWeight: "bold",
+      fontSize: window.innerWidth < 640 ? "16px" : "14px",
     }),
     placeholder: (provided) => ({
       ...provided,
       color: "#6b7280",
-      fontSize: window.innerWidth < 640 ? '16px' : '14px',
+      fontSize: window.innerWidth < 640 ? "16px" : "14px",
     }),
     dropdownIndicator: (provided) => ({
       ...provided,
-      color: '#6b7280',
-      '&:hover': {
-        color: '#6366f1',
+      color: "#6b7280",
+      "&:hover": {
+        color: "#6366f1",
       },
     }),
-    indicatorSeparator: () => ({ display: 'none' }),
+    indicatorSeparator: () => ({ display: "none" }),
     menu: (provided) => ({
       ...provided,
-      borderRadius: '8px',
-      boxShadow: '0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05)',
-      border: '1px solid #e5e7eb',
-      marginTop: '4px',
+      borderRadius: "8px",
+      boxShadow:
+        "0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05)",
+      border: "1px solid #e5e7eb",
+      marginTop: "4px",
     }),
   };
 
@@ -138,7 +142,7 @@ const CustomSelect = ({
         placeholder="Select a color..."
         styles={customStyles}
         isSearchable={false}
-        menuPortalTarget={typeof window !== 'undefined' ? document.body : null}
+        menuPortalTarget={typeof window !== "undefined" ? document.body : null}
         menuPosition="fixed"
         maxMenuHeight={200}
       />

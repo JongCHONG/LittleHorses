@@ -1,4 +1,4 @@
-'use client'
+"use client";
 
 import React, { type CSSProperties } from "react";
 import { TbRobot } from "react-icons/tb";
@@ -13,6 +13,7 @@ import PlayerOnBoard from "./PlayersOnBoard";
 
 import type { BoardPosition } from "../utils/intefaces/boardPosition";
 import type { Player } from "../utils/intefaces/player";
+import { colorMap } from "utils/constants/colorMap";
 
 interface BoardElementProps {
   circlePosition: BoardPosition[];
@@ -32,22 +33,22 @@ const cssStyles: {
   };
 } = {
   tan: {
-    color: "#DAB785",
+    color: colorMap.tan,
   },
   burntSienna: {
-    color: "#C65D4D",
+    color: colorMap.burntSienna,
     top: 0,
     right: 0,
     position: "absolute",
   },
   cambridgeBlue: {
-    color: "#70A288",
+    color: colorMap.cambridgeBlue,
     bottom: 0,
     right: 0,
     position: "absolute",
   },
   prussianBlue: {
-    color: "#1969a1ff",
+    color: colorMap.prussianBlue,
     bottom: 0,
     left: 0,
     position: "absolute",
@@ -74,7 +75,7 @@ const BoardElement = ({
       <div
         className="absolute flex flex-col items-center justify-center text-white p-2 sm:p-3"
         style={{
-          width: "min(350px, 41.18%)", 
+          width: "min(350px, 41.18%)",
           height: "min(350px, 41.18%)",
           background: cssStyles[name].color,
           top: cssStyles[name].top,
@@ -90,8 +91,12 @@ const BoardElement = ({
         {player && (
           <>
             <p className="text-xs sm:text-sm mb-1">Player : {player?.name}</p>
-            <p className="text-xs sm:text-sm mb-1">Ready : {player?.isReady ? "Yes" : "No"}</p>
-            <p className="text-xs sm:text-sm mb-2">Score : {player?.score || 0}</p>
+            <p className="text-xs sm:text-sm mb-1">
+              Ready : {player?.isReady ? "Yes" : "No"}
+            </p>
+            <p className="text-xs sm:text-sm mb-2">
+              Score : {player?.score || 0}
+            </p>
             <div className="flex gap-1 items-center mt-1 flex-wrap justify-center">
               <span className="text-xs sm:text-sm">
                 {player?.score === numOfPawns
@@ -103,18 +108,31 @@ const BoardElement = ({
               <div className="flex gap-1 flex-wrap">
                 {Array.from({
                   length: Math.max(
-                    (player?.pawns?.filter((p) => !p.isFinished).length ?? 0) - 1,
+                    (player?.pawns?.filter((p) => !p.isFinished).length ?? 0) -
+                      1,
                     0
                   ),
                 }).map((_, idx) =>
                   player?.pawnName === "Robot" ? (
-                    <TbRobot key={idx} className="w-4 h-4 sm:w-6 sm:h-6 md:w-7 md:h-7" />
+                    <TbRobot
+                      key={idx}
+                      className="w-4 h-4 sm:w-6 sm:h-6 md:w-7 md:h-7"
+                    />
                   ) : player?.pawnName === "Plane" ? (
-                    <TiPlaneOutline key={idx} className="w-4 h-4 sm:w-6 sm:h-6 md:w-7 md:h-7" />
+                    <TiPlaneOutline
+                      key={idx}
+                      className="w-4 h-4 sm:w-6 sm:h-6 md:w-7 md:h-7"
+                    />
                   ) : player?.pawnName === "Cat" ? (
-                    <FaCat key={idx} className="w-4 h-4 sm:w-6 sm:h-6 md:w-7 md:h-7" />
+                    <FaCat
+                      key={idx}
+                      className="w-4 h-4 sm:w-6 sm:h-6 md:w-7 md:h-7"
+                    />
                   ) : player?.pawnName === "Planet" ? (
-                    <IoMdPlanet key={idx} className="w-4 h-4 sm:w-6 sm:h-6 md:w-7 md:h-7" />
+                    <IoMdPlanet
+                      key={idx}
+                      className="w-4 h-4 sm:w-6 sm:h-6 md:w-7 md:h-7"
+                    />
                   ) : null
                 )}
               </div>

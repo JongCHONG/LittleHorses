@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
 import type { Player } from "../utils/intefaces/player";
@@ -67,7 +67,7 @@ const PlayersOrderForm = ({ handleReset }: PlayersOrderFormProps) => {
     },
   });
 
-  const handleRollDice = () => {
+  const handleRollDice = useCallback(() => {
     if (tempCurrentPlayerIndex >= tempPlayersOrder.length) {
       setMessage("Tous les joueurs ont lancé le dé.");
       return;
@@ -75,7 +75,7 @@ const PlayersOrderForm = ({ handleReset }: PlayersOrderFormProps) => {
 
     setMessage("");
     rollDice();
-  };
+  }, [tempCurrentPlayerIndex, tempPlayersOrder.length, rollDice]);
 
   return (
     <div className="w-full max-w-lg mx-auto bg-white p-6 sm:p-8 rounded-xl shadow-lg">

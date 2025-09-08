@@ -16,15 +16,15 @@ import {
   setCurrentPlayerIndex,
 } from "../utils/slices/currentSlice";
 import { getRoute, getStartPosition } from "../utils/helpers";
-import PlayersOrderForm from "./PlayersOrderForm";
+import { useRollDice } from "utils/hooks/handleRollDice";
 import { useGameLog } from "../utils/contexts/GameLogContext";
 
+import PlayersOrderForm from "./PlayersOrderForm";
 import GameControls from "./GameControls";
 
 const DashBoard = () => {
   const dispatch = useDispatch();
   const { addLog, clearLog } = useGameLog();
-  const [diceRoll, setDiceRoll] = useState<number>(0);
   const [numPlayers, setNumPlayers] = useState<number | null>(null);
   const players = useSelector((state: { players: Player[] }) => state.players);
 
@@ -62,125 +62,116 @@ const DashBoard = () => {
     }
   }, [currentPlayerIndex, currentPlayer?.pawns, dispatch]);
 
-  const handleRollDice = () => {
-    let count = 0;
-    const intervalId: ReturnType<typeof setInterval> = setInterval(() => {
-      setDiceRoll(Math.floor(Math.random() * 6) + 1);
-      count++;
-      if (count > 10) {
-        clearInterval(intervalId);
-        // const finalRoll = Math.floor(Math.random() * 6) + 1;
-        const finalRoll = 6;
-        setDiceRoll(finalRoll);
+  const { diceRoll, rollDice } = useRollDice({
+    onRoll: (finalRoll) => {
+      addLog(`${currentPlayer?.name} rolled a ${finalRoll}`);
 
-        addLog(`${currentPlayer?.name} rolled a ${finalRoll}`);
+      if (finalRoll === 6 && currentPlayer.isReady === false) {
+        addLog("You rolled a 6! You can now start moving your pawn.");
+        dispatch(
+          updatePlayer({
+            id: currentPlayerIndex,
+            isReady: true,
+          })
+        );
+      } else if (currentPlayer.isReady) {
+        const pawns = currentPlayer.pawns;
+        const currentRoute = currentPlayer.color
+          ? getRoute(currentPlayer.color)
+          : [];
+        if (pawns && pawns.length > 0) {
+          const pawnPositionId = pawns[currentPawnIndex]?.actualPosition?.id;
+          if (typeof pawnPositionId === "number") {
+            const newIndex = pawnPositionId + finalRoll;
+            if (newIndex < currentRoute.length) {
+              addLog(
+                `${currentPlayer?.name} moves forward by ${finalRoll} spaces`
+              );
 
-        if (finalRoll === 6 && currentPlayer.isReady === false) {
-          addLog("You rolled a 6! You can now start moving your pawn.");
-          dispatch(
-            updatePlayer({
-              id: currentPlayerIndex,
-              isReady: true,
-            })
-          );
-        } else if (currentPlayer.isReady) {
-          const pawns = currentPlayer.pawns;
-          const currentRoute = currentPlayer.color
-            ? getRoute(currentPlayer.color)
-            : [];
-          if (pawns && pawns.length > 0) {
-            const pawnPositionId = pawns[currentPawnIndex]?.actualPosition?.id;
-            if (typeof pawnPositionId === "number") {
-              const newIndex = pawnPositionId + finalRoll;
-              if (newIndex < currentRoute.length) {
-                addLog(
-                  `${currentPlayer?.name} moves forward by ${finalRoll} spaces`
-                );
+              dispatch(
+                setPawnActualPosition({
+                  playerIndex: currentPlayerIndex,
+                  pawnIndex: currentPawnIndex,
+                  position: { ...currentRoute[newIndex], id: newIndex },
+                })
+              );
+              const currentOrderIdx = playersOrder.indexOf(currentPlayerIndex);
+              const nextPlayerIndex =
+                currentOrderIdx !== -1 &&
+                currentOrderIdx < playersOrder.length - 1
+                  ? playersOrder[currentOrderIdx + 1]
+                  : playersOrder[0];
 
+              dispatch(setCurrentPlayerIndex(nextPlayerIndex));
+            } else {
+              dispatch(
+                setPawnActualPosition({
+                  playerIndex: currentPlayerIndex,
+                  pawnIndex: currentPawnIndex,
+                  position: { x: 400, y: 400, id: 72 },
+                  isFinished: true,
+                  isOnBoard: false,
+                })
+              );
+              const pawns = currentPlayer.pawns;
+              const nextPawnIdx = pawns?.findIndex(
+                (p, idx) =>
+                  !p.isFinished && !p.isOnBoard && idx !== currentPawnIndex
+              );
+
+              if (typeof nextPawnIdx === "number" && nextPawnIdx !== -1) {
                 dispatch(
                   setPawnActualPosition({
                     playerIndex: currentPlayerIndex,
-                    pawnIndex: currentPawnIndex,
-                    position: { ...currentRoute[newIndex], id: newIndex },
+                    pawnIndex: nextPawnIdx,
+                    position: {
+                      ...getStartPosition(currentPlayer.color ?? "none"),
+                      id: 0,
+                    },
+                    isOnBoard: true,
                   })
                 );
-                const currentOrderIdx =
-                  playersOrder.indexOf(currentPlayerIndex);
-                const nextPlayerIndex =
-                  currentOrderIdx !== -1 &&
-                  currentOrderIdx < playersOrder.length - 1
-                    ? playersOrder[currentOrderIdx + 1]
-                    : playersOrder[0];
-
-                dispatch(setCurrentPlayerIndex(nextPlayerIndex));
-              } else {
-                dispatch(
-                  setPawnActualPosition({
-                    playerIndex: currentPlayerIndex,
-                    pawnIndex: currentPawnIndex,
-                    position: { x: 400, y: 400, id: 72 },
-                    isFinished: true,
-                    isOnBoard: false,
-                  })
-                );
-                const pawns = currentPlayer.pawns;
-                const nextPawnIdx = pawns?.findIndex(
-                  (p, idx) =>
-                    !p.isFinished && !p.isOnBoard && idx !== currentPawnIndex
-                );
-
-                if (typeof nextPawnIdx === "number" && nextPawnIdx !== -1) {
-                  dispatch(
-                    setPawnActualPosition({
-                      playerIndex: currentPlayerIndex,
-                      pawnIndex: nextPawnIdx,
-                      position: {
-                        ...getStartPosition(currentPlayer.color ?? "none"),
-                        id: 0,
-                      },
-                      isOnBoard: true,
-                    })
-                  );
-                  addLog(`${currentPlayer?.name}'s next pawn enters the board`);
-                }
-                const newScore = (currentPlayer.score || 0) + 1;
-                if (newScore === currentPlayer?.pawns?.length) {
-                  addLog(`🎉 ${currentPlayer.name} WINS THE GAME! 🎉`);
-                } else {
-                  addLog("You reached the end! Your pawn is finished.");
-                }
-
-                dispatch(
-                  updatePlayer({
-                    id: currentPlayerIndex,
-                    score: newScore,
-                  })
-                );
-
-                const currentOrderIdx =
-                  playersOrder.indexOf(currentPlayerIndex);
-                const nextPlayerIndex =
-                  currentOrderIdx !== -1 &&
-                  currentOrderIdx < playersOrder.length - 1
-                    ? playersOrder[currentOrderIdx + 1]
-                    : playersOrder[0];
-                dispatch(setCurrentPlayerIndex(nextPlayerIndex));
+                addLog(`${currentPlayer?.name}'s next pawn enters the board`);
               }
+              const newScore = (currentPlayer.score || 0) + 1;
+              if (newScore === currentPlayer?.pawns?.length) {
+                addLog(`🎉 ${currentPlayer.name} WINS THE GAME! 🎉`);
+              } else {
+                addLog("You reached the end! Your pawn is finished.");
+              }
+
+              dispatch(
+                updatePlayer({
+                  id: currentPlayerIndex,
+                  score: newScore,
+                })
+              );
+
+              const currentOrderIdx = playersOrder.indexOf(currentPlayerIndex);
+              const nextPlayerIndex =
+                currentOrderIdx !== -1 &&
+                currentOrderIdx < playersOrder.length - 1
+                  ? playersOrder[currentOrderIdx + 1]
+                  : playersOrder[0];
+              dispatch(setCurrentPlayerIndex(nextPlayerIndex));
             }
           }
-        } else {
-          addLog(`${currentPlayer?.name} needs a 6 to start moving`);
         }
+      } else {
+        addLog(`${currentPlayer?.name} needs a 6 to start moving`);
       }
-    }, 50);
-  };
+    },
+  });
 
-  const handleNumPlayersSubmit = (num: number) => {
+  const handleRollDice = useCallback(() => {
+    rollDice();
+  }, [rollDice]);
+
+  const handleNumPlayersSubmit = useCallback((num: number) => {
     setNumPlayers(num);
-  };
+  }, []);
 
   const resetGame = useCallback(() => {
-    setDiceRoll(0);
     clearLog();
     setNumPlayers(null);
     dispatch({ type: "RESET_GAME" });

@@ -2,22 +2,22 @@ import {
   BurntSiennaCirclePositions,
   BurntSiennaEndZones,
   BurntSiennaLastCirclePosition,
-} from "./path/burntSiennaPath";
+} from "../path/burntSiennaPath";
 import {
   CambridgeBlueCirclePositions,
   CambridgeBlueEndZones,
   CambridgeBlueLastCirclePosition,
-} from "./path/cambridgeBluePath";
+} from "../path/cambridgeBluePath";
 import {
   PrussianBlueCirclePositions,
   PrussianBlueEndZones,
   PrussianBlueLastCirclePosition,
-} from "./path/prussianBluePath";
+} from "../path/prussianBluePath";
 import {
   TanCirclePositions,
   TanEndZones,
   TanLastCirclePosition,
-} from "./path/tanPath";
+} from "../path/tanPath";
 
 export const TanRoute = TanCirclePositions.map((pos, i) => ({
   ...pos,

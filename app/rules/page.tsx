@@ -1,73 +1,94 @@
 "use client";
 
+import { useRouter } from "next/navigation";
+import { v4 as uuidv4 } from "uuid";
+
+import Button from "../../components/Button";
+import RulesSection from "components/RulesSection";
+import { rulesSections } from "utils/constants/rulesSectionsData";
+
 const Rules = () => {
+  const router = useRouter();
+
   return (
-    <div className="max-w-lg rounded-lg shadow-md p-6 mx-auto">
-      <h2 className="text-2xl font-bold mb-4 text-center">
-        Game Rules
-      </h2>
-      <section className="mb-6">
-        <h3 className="text-lg font-semibold mb-2 text-blue-700">
-          Bringing Pieces into Play
-        </h3>
-        <ul className="list-disc list-inside space-y-1">
-          <li>
-            To move a piece out of the stable and onto the first square of the track, you must roll a <strong>6</strong> on the dice.
-          </li>
-          <li>
-            If you roll a 6, you can bring out a piece <strong>and</strong> roll the dice again.
-          </li>
-          <li>
-            As long as the player keeps rolling 6s, they may continue to play.
-          </li>
-        </ul>
-      </section>
-      <section className="mb-6">
-        <h3 className="text-lg font-semibold mb-2 text-green-700">
-          Regular Movement
-        </h3>
-        <ul className="list-disc list-inside space-y-1">
-          <li>
-            On each turn, the player rolls the dice and moves one of their pieces forward by the number shown.
-          </li>
-          <li>
-            Pieces move along the path marked by their color: each player has their own starting square and follows the common outer track (clockwise or counterclockwise depending on local rules).
-          </li>
-        </ul>
-      </section>
-      <section className="mb-6">
-        <h3 className="text-lg font-semibold mb-2 text-red-700">
-          Capturing an Opponent&#39;s Piece
-        </h3>
-        <ul className="list-disc list-inside space-y-1">
-          <li>
-            If a piece lands on the same square as another (except for the finish or stable squares), the piece already there is &quot;captured&quot; and sent back to its original stable: it must roll a 6 again to come out.
-          </li>
-        </ul>
-      </section>
-      <section className="mb-6">
-        <h3 className="text-lg font-semibold mb-2 text-yellow-700">
-          Final Stretch
-        </h3>
-        <ul className="list-disc list-inside space-y-1">
-          <li>
-            When a piece has completed a full lap, it turns onto its &#39;final stretch&#39; (the colored path leading to the center). There, it advances one square at a time according to dice rolls.
-          </li>
-          <li>
-            To reach the last finish square, you must roll exactly the number of spaces remaining: if you roll too high, the piece does not move.
-          </li>
-        </ul>
-      </section>
-      <section>
-        <h3 className="text-lg font-semibold mb-2 text-purple-700">
-          Winning the Game
-        </h3>
-        <ul className="list-disc list-inside space-y-1">
-          <li>
-            The winner is the first to bring all their pieces to the central finish square of their color.
-          </li>
-        </ul>
-      </section>
+    <div className="min-h-screen-safe bg-gradient-to-br from-indigo-50 via-white to-purple-50">
+      <div className="container mx-auto px-4 py-8 sm:py-12">
+        <div className="max-w-4xl mx-auto">
+          <div className="text-center mb-8 sm:mb-12">
+            <div className="inline-block mb-6">
+              <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold bg-gradient-to-r from-indigo-600 via-purple-600 to-pink-600 bg-clip-text text-transparent">
+                📚 Game Rules 📚
+              </h1>
+              <div className="h-1 bg-gradient-to-r from-indigo-400 to-purple-400 rounded-full mt-2"></div>
+            </div>
+            <p className="text-lg text-gray-600 max-w-2xl mx-auto">
+              Master the art of Little Horses with these comprehensive rules and
+              strategies
+            </p>
+          </div>
+
+          <div className="space-y-6 sm:space-y-8 mb-12">
+            {rulesSections.map((section) => (
+              <RulesSection key={uuidv4()} section={section} />
+            ))}
+          </div>
+
+          <div className="bg-gradient-to-r from-amber-50 to-yellow-50 border-2 border-amber-200 rounded-2xl p-6 sm:p-8 mb-8">
+            <h3 className="text-xl sm:text-2xl font-bold text-amber-800 mb-4 flex items-center">
+              💡 Pro Tips
+            </h3>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div className="flex items-start">
+                <span className="text-lg mr-2">🎯</span>
+                <span className="text-amber-700">
+                  Focus on getting all pieces out before advancing too far
+                </span>
+              </div>
+              <div className="flex items-start">
+                <span className="text-lg mr-2">🛡️</span>
+                <span className="text-amber-700">
+                  Use blocking strategies to slow opponents
+                </span>
+              </div>
+              <div className="flex items-start">
+                <span className="text-lg mr-2">🎲</span>
+                <span className="text-amber-700">
+                  Count spaces carefully in the final stretch
+                </span>
+              </div>
+              <div className="flex items-start">
+                <span className="text-lg mr-2">⚡</span>
+                <span className="text-amber-700">
+                  Keep rolling those 6s for extra turns!
+                </span>
+              </div>
+            </div>
+          </div>
+
+          <div className="text-center">
+            <div className="space-y-4 sm:space-y-0 sm:flex sm:justify-center sm:space-x-4">
+              <Button
+                onClick={() => router.push("/")}
+                className="w-full sm:w-auto min-w-[140px] bg-gray-500 hover:bg-gray-600 text-white"
+              >
+                🏠 Home
+              </Button>
+
+              <Button
+                onClick={() => router.push("/game")}
+                className="w-full sm:w-auto min-w-[140px] bg-gradient-to-r from-green-500 to-emerald-500 hover:from-green-600 hover:to-emerald-600 text-white shadow-lg"
+              >
+                🎮 Start Playing
+              </Button>
+            </div>
+
+            <p className="mt-6 text-sm text-gray-500">
+              Ready to put these rules into practice? Start a new game and have
+              fun! 🎉
+            </p>
+          </div>
+        </div>
+      </div>
     </div>
   );
 };

@@ -1,69 +1,84 @@
-# React + TypeScript + Vite
+# Little Horses
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Une application de jeu de société construite avec Next.js, React, TypeScript et Tailwind CSS.
 
-Currently, two official plugins are available:
+## 🚀 Migration vers Next.js
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+Ce projet a été migré de Vite vers Next.js 15 avec l'App Router pour bénéficier des dernières fonctionnalités et optimisations.
 
-## Expanding the ESLint configuration
+## 🛠️ Technologies utilisées
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+- **Next.js 15** - Framework React avec App Router
+- **React 19** - Bibliothèque UI
+- **TypeScript** - Typage statique
+- **Tailwind CSS 4.x** - Framework CSS utilitaire
+- **Redux Toolkit** - Gestion d'état
+- **Framer Motion** - Animations
+- **React Icons** - Icônes
 
-```js
-export default tseslint.config([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+## 📦 Installation et démarrage
 
-      // Remove tseslint.configs.recommended and replace with this
-      ...tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      ...tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      ...tseslint.configs.stylisticTypeChecked,
+```bash
+# Installer les dépendances
+npm install
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+# Lancer le serveur de développement
+npm run dev
+
+# Construire pour la production
+npm run build
+
+# Lancer la version de production
+npm start
+
+# Vérifier le linting
+npm run lint
+
+# Vérifier les types TypeScript
+npm run type-check
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+L'application sera accessible sur [http://localhost:3000](http://localhost:3000).
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+## 🏗️ Architecture du projet
 
-export default tseslint.config([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
 ```
+├── app/                    # App Router de Next.js
+│   ├── layout.tsx         # Layout principal
+│   ├── page.tsx           # Page d'accueil
+│   └── StoreProvider.tsx  # Fournisseur Redux
+├── src/
+│   ├── components/        # Composants React réutilisables
+│   └── utils/            # Utilitaires, store Redux, types
+├── public/               # Fichiers statiques
+└── Configuration files
+```
+
+## 🎯 Fonctionnalités
+
+- Interface de jeu interactive
+- Gestion d'état avec Redux Toolkit
+- Animations fluides avec Framer Motion
+- Design responsive avec Tailwind CSS
+- Support TypeScript complet
+- Optimisations de performance Next.js
+
+## 🔧 Configuration
+
+- **Next.js**: Configuration dans `next.config.js`
+- **TypeScript**: Configuration dans `tsconfig.json`
+- **Tailwind CSS**: Configuration dans `tailwind.config.js`
+- **PostCSS**: Configuration dans `postcss.config.js`
+- **ESLint**: Configuration dans `.eslintrc.json`
+
+## 📝 Notes de migration
+
+- Migration réussie de Vite vers Next.js 15
+- Conservation de tous les composants et utilitaires existants
+- Mise à jour vers React 19 et Tailwind CSS 4.x
+- Utilisation de l'App Router pour une meilleure structure
+- Configuration optimisée pour les performances
+
+## 🎮 Comment jouer
+
+Le jeu suit les règles classiques des petits chevaux avec une interface moderne et interactive.

@@ -1,3 +1,5 @@
+'use client'
+
 import { useEffect, useState, useCallback } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
@@ -182,7 +184,7 @@ const DashBoard = () => {
     setNumPlayers(null);
     setShowNumPlayersForm(true);
     dispatch({ type: "RESET_GAME" });
-  }, [dispatch]);
+  }, [dispatch, clearLog]);
 
   return (
     <div className="p-5 flex align-items-center">

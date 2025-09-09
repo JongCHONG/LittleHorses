@@ -1,0 +1,2 @@
+# Ignore unescaped apostrophes in French text
+src/components/Rules.tsx

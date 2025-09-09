@@ -1,3 +1,5 @@
+'use client'
+
 import { useState, type FormEvent, useCallback } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { createSelector } from "@reduxjs/toolkit";
@@ -23,6 +25,14 @@ const selectPlayers = (state: RootState) => state.players;
 const selectTakenPawnNames = createSelector([selectPlayers], (players) =>
   players.map((p: Player) => p.pawnName)
 );
+const selectTakenColors = createSelector([selectPlayers], (players) =>
+  players
+    .map((p: Player) => p.color)
+    .filter(
+      (c): c is Exclude<Player["color"], "none" | undefined> =>
+        c !== undefined && c !== "none"
+    )
+);
 
 const PlayerForm = ({
   numPlayers,
@@ -31,14 +41,7 @@ const PlayerForm = ({
 }: PlayerFormProps) => {
   const dispatch = useDispatch();
   const { addLog } = useGameLog();
-  const takenColors = useSelector((state: RootState) =>
-    state.players
-      .map((p: Player) => p.color)
-      .filter(
-        (c): c is Exclude<Player["color"], "none" | undefined> =>
-          c !== undefined && c !== "none"
-      )
-  );
+  const takenColors = useSelector(selectTakenColors);
   const takenPawnNames = useSelector(selectTakenPawnNames);
   const numOfPawnsPerTeam = useSelector(
     (state: { numOfPawnsPerTeam: number }) => state.numOfPawnsPerTeam
@@ -46,7 +49,6 @@ const PlayerForm = ({
   const playersOrder = useSelector(
     (state: { playersOrder: number[] }) => state.playersOrder
   );
-
   const currentPlayerIndex = useSelector(
     (state: { current: { currentPlayerIndex: number } }) =>
       state.current.currentPlayerIndex

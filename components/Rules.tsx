@@ -2,7 +2,7 @@ const Rules = () => {
   return (
     <div className="max-w-lg rounded-lg shadow-md p-6">
       <h2 className="text-2xl font-bold mb-4 text-center">
-        Déroulement d’une partie
+        Déroulement d&apos;une partie
       </h2>
       <section className="mb-6">
         <h3 className="text-lg font-semibold mb-2 text-blue-700">
@@ -10,7 +10,7 @@ const Rules = () => {
         </h3>
         <ul className="list-disc list-inside space-y-1">
           <li>
-            Pour sortir un pion de l’écurie et le placer sur la première case de
+            Pour sortir un pion de l&apos;écurie et le placer sur la première case de
             parcours, il faut faire un <strong>6</strong> au dé.
           </li>
           <li>
@@ -43,24 +43,24 @@ const Rules = () => {
         </h3>
         <ul className="list-disc list-inside space-y-1">
           <li>
-            Si un pion termine sur la même case qu’un autre (hors cases
-            d'arrivée ou d’écurie), le pion déjà présent est « mangé » et
-            retourne à son écurie d’origine : il devra refaire un 6 pour sortir.
+            Si un pion termine sur la même case qu&apos;un autre (hors cases
+            d&apos;arrivée ou d&apos;écurie), le pion déjà présent est « mangé » et
+            retourne à son écurie d&apos;origine : il devra refaire un 6 pour sortir.
           </li>
         </ul>
       </section>
       <section className="mb-6">
         <h3 className="text-lg font-semibold mb-2 text-yellow-700">
-          Rampe d’arrivée
+          Rampe d&apos;arrivée
         </h3>
         <ul className="list-disc list-inside space-y-1">
           <li>
             Quand un pion a fait tout le tour, il bifurque sur sa « rampe
-            d’arrivée » (le chemin coloré qui pointe vers le centre). Là, il
+            d&apos;arrivée » (le chemin coloré qui pointe vers le centre). Là, il
             avance case par case grâce aux lancers de dés.
           </li>
           <li>
-            Pour aller sur la dernière case d’arrivée, il faut obtenir
+            Pour aller sur la dernière case d&apos;arrivée, il faut obtenir
             exactement le nombre de points restants au dé : trop, le pion ne
             bouge pas.
           </li>
@@ -73,7 +73,7 @@ const Rules = () => {
         <ul className="list-disc list-inside space-y-1">
           <li>
             Le vainqueur est le premier à amener tous ses pions sur la case
-            centrale d’arrivée de sa couleur.
+            centrale d&apos;arrivée de sa couleur.
           </li>
         </ul>
       </section>

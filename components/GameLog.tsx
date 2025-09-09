@@ -1,3 +1,5 @@
+'use client'
+
 import { useRef, useEffect } from "react";
 import { useGameLog } from "../utils/contexts/GameLogContext";
 

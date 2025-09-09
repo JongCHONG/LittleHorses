@@ -1,3 +1,5 @@
+'use client'
+
 import { TbRobot } from "react-icons/tb";
 import { TiPlaneOutline } from "react-icons/ti";
 import { FaCat } from "react-icons/fa";

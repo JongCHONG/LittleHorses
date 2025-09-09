@@ -1,4 +1,4 @@
-'use client'
+"use client";
 
 import { useEffect, useState, useCallback } from "react";
 import { useDispatch, useSelector } from "react-redux";
@@ -27,10 +27,15 @@ const DashBoard = () => {
   const { addLog, clearLog } = useGameLog();
   const [diceRoll, setDiceRoll] = useState<number>(0);
   const [numPlayers, setNumPlayers] = useState<number | null>(null);
-  const [showNumPlayersForm, setShowNumPlayersForm] = useState<boolean>(true);
-  const [showPlayersOrderForm, setShowPlayersOrderForm] = useState(false);
-  const [showPlayerForm, setShowPlayerForm] = useState(false);
   const players = useSelector((state: { players: Player[] }) => state.players);
+
+  const numOfPawn = useSelector(
+    (state: { numOfPawnsPerTeam: number }) => state.numOfPawnsPerTeam
+  );
+  const hasDefaultPlayer = players.some((player) =>
+    player.name?.toLowerCase().includes("player")
+  );
+
 
   const currentPlayerIndex = useSelector(
     (state: { current: { currentPlayerIndex: number } }) =>
@@ -170,41 +175,31 @@ const DashBoard = () => {
 
   const handleNumPlayersSubmit = (num: number) => {
     setNumPlayers(num);
-    setShowNumPlayersForm(false);
-    setShowPlayersOrderForm(true);
-  };
-
-  const handlePlayersOrderValidated = () => {
-    setShowPlayersOrderForm(false);
-    setShowPlayerForm(true);
   };
 
   const resetGame = useCallback(() => {
     setDiceRoll(0);
     clearLog();
     setNumPlayers(null);
-    setShowNumPlayersForm(true);
     dispatch({ type: "RESET_GAME" });
   }, [dispatch, clearLog]);
 
   return (
     <div className="p-5 flex align-items-center">
-      {showNumPlayersForm ? (
+      {numOfPawn === 0 ? (
         <NumberOfPlayersPawnsForm
           numPlayers={numPlayers ?? 0}
           setNumPlayers={setNumPlayers}
           handleNumPlayersSubmit={handleNumPlayersSubmit}
         />
-      ) : showPlayersOrderForm ? (
+      ) : numOfPawn !== 0 && playersOrder.length === 0 ? (
         <PlayersOrderForm
-          onValidated={handlePlayersOrderValidated}
           handleReset={resetGame}
         />
-      ) : showPlayerForm ? (
+      ) : hasDefaultPlayer ? (
         <PlayerForm
           numPlayers={numPlayers ?? 0}
           handleReset={resetGame}
-          onAllPlayersRegistered={() => setShowPlayerForm(false)}
         />
       ) : (
         <>
@@ -236,15 +231,8 @@ const DashBoard = () => {
                 ))}
               </ol>
             </div>
-            <Button
-              onClick={handleRollDice}
-            >
-              Roll Dice: {diceRoll}
-            </Button>
-            <Button
-              color="red"
-              onClick={resetGame}
-            >
+            <Button onClick={handleRollDice}>Roll Dice: {diceRoll}</Button>
+            <Button color="red" onClick={resetGame}>
               Restart
             </Button>
             <GameLog height={500 - (numPlayers ?? 0) * 10} />

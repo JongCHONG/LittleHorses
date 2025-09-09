@@ -1,8 +1,9 @@
 "use client";
 
 import { Provider } from "react-redux";
-import { store } from "../utils/store";
+import { store, persistor } from "../utils/store";
 import { GameLogProvider } from "../utils/contexts/GameLogContext";
+import { PersistGate } from "redux-persist/integration/react";
 
 export default function ClientProviders({
   children,
@@ -11,9 +12,9 @@ export default function ClientProviders({
 }) {
   return (
     <Provider store={store}>
-      <GameLogProvider>
-        {children}
-      </GameLogProvider>
+      <PersistGate loading={null} persistor={persistor}>
+        <GameLogProvider>{children}</GameLogProvider>
+      </PersistGate>
     </Provider>
   );
 }

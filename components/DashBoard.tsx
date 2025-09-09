@@ -1,10 +1,10 @@
-'use client'
+"use client";
 
 import { useEffect, useState, useCallback } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
 import PlayerForm from "./PlayerForm";
-import NumberOfPlayersPawnsForm from "./GameSettingsForm";
+import GameSettingsForm from "./GameSettingsForm";
 
 import {
   setPawnActualPosition,
@@ -17,20 +17,23 @@ import {
 } from "../utils/slices/currentSlice";
 import { getRoute, getStartPosition } from "../utils/helpers";
 import PlayersOrderForm from "./PlayersOrderForm";
-import { colorMap } from "../utils/colorMap";
 import { useGameLog } from "../utils/contexts/GameLogContext";
-import GameLog from "./GameLog";
-import Button from "./Button";
+
+import GameControls from "./GameControls";
 
 const DashBoard = () => {
   const dispatch = useDispatch();
   const { addLog, clearLog } = useGameLog();
   const [diceRoll, setDiceRoll] = useState<number>(0);
   const [numPlayers, setNumPlayers] = useState<number | null>(null);
-  const [showNumPlayersForm, setShowNumPlayersForm] = useState<boolean>(true);
-  const [showPlayersOrderForm, setShowPlayersOrderForm] = useState(false);
-  const [showPlayerForm, setShowPlayerForm] = useState(false);
   const players = useSelector((state: { players: Player[] }) => state.players);
+
+  const numOfPawn = useSelector(
+    (state: { numOfPawnsPerTeam: number }) => state.numOfPawnsPerTeam
+  );
+  const hasDefaultPlayer = players.some((player) =>
+    player.name?.toLowerCase().includes("player")
+  );
 
   const currentPlayerIndex = useSelector(
     (state: { current: { currentPlayerIndex: number } }) =>
@@ -52,6 +55,10 @@ const DashBoard = () => {
           pawns: currentPlayer.pawns,
         })
       );
+    }
+    if (players) {
+      const numPlayers = players.length;
+      setNumPlayers(numPlayers);
     }
   }, [currentPlayerIndex, currentPlayer?.pawns, dispatch]);
 
@@ -170,86 +177,43 @@ const DashBoard = () => {
 
   const handleNumPlayersSubmit = (num: number) => {
     setNumPlayers(num);
-    setShowNumPlayersForm(false);
-    setShowPlayersOrderForm(true);
-  };
-
-  const handlePlayersOrderValidated = () => {
-    setShowPlayersOrderForm(false);
-    setShowPlayerForm(true);
   };
 
   const resetGame = useCallback(() => {
     setDiceRoll(0);
     clearLog();
     setNumPlayers(null);
-    setShowNumPlayersForm(true);
     dispatch({ type: "RESET_GAME" });
   }, [dispatch, clearLog]);
 
   return (
-    <div className="p-5 flex align-items-center">
-      {showNumPlayersForm ? (
-        <NumberOfPlayersPawnsForm
-          numPlayers={numPlayers ?? 0}
-          setNumPlayers={setNumPlayers}
-          handleNumPlayersSubmit={handleNumPlayersSubmit}
-        />
-      ) : showPlayersOrderForm ? (
-        <PlayersOrderForm
-          onValidated={handlePlayersOrderValidated}
-          handleReset={resetGame}
-        />
-      ) : showPlayerForm ? (
-        <PlayerForm
-          numPlayers={numPlayers ?? 0}
-          handleReset={resetGame}
-          onAllPlayersRegistered={() => setShowPlayerForm(false)}
-        />
+    <div className="h-full flex flex-col p-3 sm:p-5">
+      {numOfPawn === 0 ? (
+        <div className="flex-1 flex items-center justify-center">
+          <GameSettingsForm
+            numPlayers={numPlayers ?? 0}
+            setNumPlayers={setNumPlayers}
+            handleNumPlayersSubmit={handleNumPlayersSubmit}
+          />
+        </div>
+      ) : numOfPawn !== 0 && playersOrder.length === 0 ? (
+        <div className="flex-1 flex items-center justify-center">
+          <PlayersOrderForm handleReset={resetGame} />
+        </div>
+      ) : hasDefaultPlayer ? (
+        <div className="flex-1 flex items-center justify-center">
+          <PlayerForm numPlayers={numPlayers ?? 0} handleReset={resetGame} />
+        </div>
       ) : (
-        <>
-          <div
-            className="p-4 rounded shadow-md"
-            style={{
-              backgroundColor:
-                colorMap[currentPlayer?.color ?? "none"] || "white",
-              transition: "background-color 0.3s ease",
-            }}
-          >
-            <h1 className="text-2xl font-bold mb-4">Game Dashboard</h1>
-            <div className="mb-4">
-              <h2 className="text-lg font-semibold mb-2">
-                Ordre des joueurs :
-              </h2>
-              <ol className="list-decimal list-inside">
-                {playersOrder.map((playerIdx: number) => (
-                  <li
-                    key={playerIdx}
-                    className={
-                      playerIdx === currentPlayerIndex
-                        ? "font-bold text-indigo-700"
-                        : ""
-                    }
-                  >
-                    {players[playerIdx]?.name || `Joueur ${playerIdx + 1}`}
-                  </li>
-                ))}
-              </ol>
-            </div>
-            <Button
-              onClick={handleRollDice}
-            >
-              Roll Dice: {diceRoll}
-            </Button>
-            <Button
-              color="red"
-              onClick={resetGame}
-            >
-              Restart
-            </Button>
-            <GameLog height={500 - (numPlayers ?? 0) * 10} />
-          </div>
-        </>
+        <GameControls
+          currentPlayer={currentPlayer}
+          playersOrder={playersOrder}
+          diceRoll={diceRoll}
+          onDiceRoll={handleRollDice}
+          onRestart={resetGame}
+          players={players}
+          currentPlayerIndex={currentPlayerIndex}
+        />
       )}
     </div>
   );

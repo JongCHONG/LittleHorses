@@ -16,8 +16,8 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en">
-      <body className={antonio.className}>
+    <html lang="en" className="h-full">
+      <body className={`${antonio.className} min-h-screen-safe`}>
         <ClientProviders>{children}</ClientProviders>
       </body>
     </html>

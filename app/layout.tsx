@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Antonio } from "next/font/google";
 import "./globals.css";
+import ClientProviders from "./clientProviders";
 
 const antonio = Antonio({ subsets: ["latin"] });
 
@@ -17,7 +18,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={antonio.className}>
-          {children}
+        <ClientProviders>{children}</ClientProviders>
       </body>
     </html>
   );

@@ -4,7 +4,7 @@ import { useEffect, useState, useCallback } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
 import PlayerForm from "./PlayerForm";
-import NumberOfPlayersPawnsForm from "./NumberOfPlayersPawnsForm";
+import NumberOfPlayersPawnsForm from "./GameSettingsForm";
 
 import {
   setPawnActualPosition,
@@ -20,6 +20,7 @@ import PlayersOrderForm from "./PlayersOrderForm";
 import { colorMap } from "../utils/colorMap";
 import { useGameLog } from "../utils/contexts/GameLogContext";
 import GameLog from "./GameLog";
+import Button from "./Button";
 
 const DashBoard = () => {
   const dispatch = useDispatch();
@@ -235,19 +236,17 @@ const DashBoard = () => {
                 ))}
               </ol>
             </div>
-            <a
-              className="inline-block rounded-sm bg-indigo-600 px-8 py-3 text-sm font-medium text-white transition hover:scale-110 hover:-rotate-2 focus:outline-hidden cursor-pointer"
-              href="#"
+            <Button
               onClick={handleRollDice}
             >
               Roll Dice: {diceRoll}
-            </a>
-            <button
-              className="ml-4 inline-block rounded-sm bg-red-800 px-6 py-2 text-sm font-medium text-white transition hover:scale-105 focus:ring-2 focus:outline-none cursor-pointer"
+            </Button>
+            <Button
+              color="red"
               onClick={resetGame}
             >
               Restart
-            </button>
+            </Button>
             <GameLog height={500 - (numPlayers ?? 0) * 10} />
           </div>
         </>

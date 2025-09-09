@@ -8,6 +8,7 @@ import { setCurrentPlayerIndex } from "../utils/slices/currentSlice";
 import { setPlayersOrder } from "../utils/slices/playersOrderSlice";
 import GameLog from "./GameLog";
 import { useGameLog } from "../utils/contexts/GameLogContext";
+import Button from "./Button";
 
 type PlayerWithRoll = Player & { roll: number | null };
 
@@ -32,7 +33,6 @@ const PlayersOrderForm = ({
   const [message, setMessage] = useState<string>("");
   const [isOrderComplete, setIsOrderComplete] = useState(false);
 
-  // Effet pour gérer la fin du processus de lancement de dés
   useEffect(() => {
     if (isOrderComplete && tempPlayersOrder.every(p => p.roll !== null)) {
       const sortedOrder = [...tempPlayersOrder].sort(
@@ -106,20 +106,18 @@ const PlayersOrderForm = ({
           </div>
         ))}
       </div>
-      <a
-        className="inline-block rounded-sm bg-indigo-600 px-8 py-3 text-sm font-medium text-white transition hover:scale-110 hover:-rotate-2 focus:ring-3 focus:outline-hidden cursor-pointer"
-        href="#"
+      <Button
         onClick={handleRollDice}
       >
         Roll Dice: {diceRoll}
-      </a>
-      <button
-        className="ml-4 inline-block rounded-sm bg-red-800 px-6 py-2 text-sm font-medium text-white transition hover:scale-105 focus:ring-2 focus:outline-none cursor-pointer"
+      </Button>
+      <Button
+        color="red"
         onClick={handleReset}
         disabled={isRolling}
       >
         Restart
-      </button>
+      </Button>
       {message && <p className="text-red-500 mt-2">{message}</p>}
       <GameLog height={480} />
     </div>

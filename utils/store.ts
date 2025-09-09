@@ -1,10 +1,20 @@
-import { combineReducers, configureStore } from "@reduxjs/toolkit";
+import { combineReducers, configureStore, Reducer } from "@reduxjs/toolkit";
+import storage from "redux-persist/lib/storage";
+import {
+  persistReducer,
+  persistStore,
+  FLUSH,
+  REHYDRATE,
+  PAUSE,
+  PERSIST,
+  PURGE,
+  REGISTER,
+} from "redux-persist";
 
 import playersReducer from "./slices/playersSlice";
 import currentReducer from "./slices/currentSlice";
 import numOfPawnsReducer from "./slices/numOfPawnsSlice";
 import playersOrderReducer from "./slices/playersOrderSlice";
-import type { Reducer } from "@reduxjs/toolkit";
 
 const appReducer = combineReducers({
   players: playersReducer,
@@ -23,8 +33,34 @@ const rootReducer: Reducer<RootState, RootAction> = (state, action) => {
   return appReducer(state, action);
 };
 
+const persistConfig = {
+  key: "root",
+  storage,
+  whitelist: ["players", "current", "numOfPawnsPerTeam", "playersOrder"],
+};
+
+const persistedReducer = persistReducer(persistConfig, rootReducer);
+
 export const store = configureStore({
-  reducer: rootReducer,
+  reducer: persistedReducer,
+  middleware: (getDefaultMiddleware) =>
+    getDefaultMiddleware({
+      serializableCheck: {
+        ignoredActions: [
+          FLUSH,
+          REHYDRATE,
+          PAUSE,
+          PERSIST,
+          PURGE,
+          REGISTER,
+          "RESET_GAME",
+        ],
+        ignoredPaths: ["register"],
+      },
+    }),
+  devTools: true,
 });
+
+export const persistor = persistStore(store);
 
 export default store;

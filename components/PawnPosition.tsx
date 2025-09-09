@@ -35,18 +35,52 @@ const PawnPosition = ({
   if (!pos) return null;
 
   const { x, y } = pos;
+  
+  const pawnSize = `min(50px, 5.88vw, 5.88vh)`;
+  const iconSize = `min(24px, 2.82vw, 2.82vh)`;
 
   return (
     <motion.div
-      className="absolute w-[50px] h-[50px] flex items-center justify-center"
-      animate={{ left: x, top: y }}
+      className="absolute flex items-center justify-center z-20"
+      animate={{ 
+        left: `min(${x}px, ${(x / 850) * 100}%)`, 
+        top: `min(${y}px, ${(y / 850) * 100}%)` 
+      }}
       transition={{ type: "spring", stiffness: 300, damping: 30 }}
-      style={{ left: x, top: y, position: "absolute" }}
+      style={{ 
+        width: pawnSize,
+        height: pawnSize,
+        left: `min(${x}px, ${(x / 850) * 100}%)`, 
+        top: `min(${y}px, ${(y / 850) * 100}%)`,
+        position: "absolute" 
+      }}
     >
-      {pawnName === "Robot" && <TbRobot size={24} />}
-      {pawnName === "Plane" && <TiPlaneOutline size={24} />}
-      {pawnName === "Cat" && <FaCat size={24} />}
-      {pawnName === "Planet" && <IoMdPlanet size={24} />}
+      <div className="drop-shadow-lg">
+        {pawnName === "Robot" && (
+          <TbRobot 
+            style={{ fontSize: iconSize }} 
+            className="text-gray-800"
+          />
+        )}
+        {pawnName === "Plane" && (
+          <TiPlaneOutline 
+            style={{ fontSize: iconSize }} 
+            className="text-gray-800"
+          />
+        )}
+        {pawnName === "Cat" && (
+          <FaCat 
+            style={{ fontSize: iconSize }} 
+            className="text-gray-800"
+          />
+        )}
+        {pawnName === "Planet" && (
+          <IoMdPlanet 
+            style={{ fontSize: iconSize }} 
+            className="text-gray-800"
+          />
+        )}
+      </div>
     </motion.div>
   );
 };

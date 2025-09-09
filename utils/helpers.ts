@@ -1,4 +1,4 @@
-import { BurntSiennaRoute, CambridgeBlueRoute, PrussianBlueRoute, TanRoute } from "./BoardRoutes";
+import { BurntSiennaRoute, CambridgeBlueRoute, PrussianBlueRoute, TanRoute } from "./constants/boardRoutes";
 import type { BoardPosition } from "./intefaces/boardPosition";
 import { BurntSiennaCirclePositions } from "./path/burntSiennaPath";
 import { CambridgeBlueCirclePositions } from "./path/cambridgeBluePath";

@@ -1,12 +1,14 @@
-'use client'
+"use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
 import type { Player } from "../utils/intefaces/player";
 import { setCurrentPlayerIndex } from "../utils/slices/currentSlice";
 import { setPlayersOrder } from "../utils/slices/playersOrderSlice";
 import { useGameLog } from "../utils/contexts/GameLogContext";
+import { useRollDice } from "utils/hooks/handleRollDice";
+
 import Button from "./Button";
 
 type PlayerWithRoll = Player & { roll: number | null };
@@ -15,9 +17,7 @@ interface PlayersOrderFormProps {
   handleReset: () => void;
 }
 
-const PlayersOrderForm = ({
-  handleReset,
-}: PlayersOrderFormProps) => {
+const PlayersOrderForm = ({ handleReset }: PlayersOrderFormProps) => {
   const dispatch = useDispatch();
   const { addLog } = useGameLog();
   const players = useSelector((state: { players: Player[] }) => state.players);
@@ -25,71 +25,57 @@ const PlayersOrderForm = ({
     players.map((p) => ({ ...p, roll: null }))
   );
   const [tempCurrentPlayerIndex, setTempCurrentPlayerIndex] = useState(0);
-  const [diceRoll, setDiceRoll] = useState<number>(0);
-  const [isRolling, setIsRolling] = useState(false);
   const [message, setMessage] = useState<string>("");
   const [isOrderComplete, setIsOrderComplete] = useState(false);
 
   useEffect(() => {
-    if (isOrderComplete && tempPlayersOrder.every(p => p.roll !== null)) {
+    if (isOrderComplete && tempPlayersOrder.every((p) => p.roll !== null)) {
       const sortedOrder = [...tempPlayersOrder].sort(
         (a, b) => (b.roll ?? 0) - (a.roll ?? 0)
       );
-      
+
       dispatch(setPlayersOrder(sortedOrder.map((p) => p.id)));
       dispatch(setCurrentPlayerIndex(sortedOrder[0].id));
-      
+
       const orderStr = sortedOrder
         .map((p) => `${p.name} (${p.roll})`)
         .join(" -> ");
       addLog(`Final Order : ${orderStr}`);
-      
     }
   }, [isOrderComplete, tempPlayersOrder, dispatch, addLog]);
 
-  const handleRollDice = () => {
-    if (isRolling) return;
+  const { diceRoll, isRolling, rollDice } = useRollDice({
+    onRoll: (finalRoll) => {
+      addLog(
+        `${tempPlayersOrder[tempCurrentPlayerIndex].name} rolled a ${finalRoll}`
+      );
+
+      setTempPlayersOrder((prev) => {
+        const updated = [...prev];
+        updated[tempCurrentPlayerIndex] = {
+          ...updated[tempCurrentPlayerIndex],
+          roll: finalRoll,
+        };
+        return updated;
+      });
+
+      setTempCurrentPlayerIndex((idx) => idx + 1);
+
+      if (tempCurrentPlayerIndex === tempPlayersOrder.length - 1) {
+        setIsOrderComplete(true);
+      }
+    },
+  });
+
+  const handleRollDice = useCallback(() => {
     if (tempCurrentPlayerIndex >= tempPlayersOrder.length) {
       setMessage("Tous les joueurs ont lancé le dé.");
       return;
     }
-    
-    setIsRolling(true);
+
     setMessage("");
-    let count = 0;
-    
-    const intervalId: ReturnType<typeof setInterval> = setInterval(() => {
-      setDiceRoll(Math.floor(Math.random() * 6) + 1);
-      count++;
-      
-      if (count > 10) {
-        clearInterval(intervalId);
-        const finalRoll = Math.floor(Math.random() * 6) + 1;
-        setDiceRoll(finalRoll);
-        
-        addLog(
-          `${tempPlayersOrder[tempCurrentPlayerIndex].name} rolled a ${finalRoll}`
-        );
-
-        setTempPlayersOrder((prev) => {
-          const updated = [...prev];
-          updated[tempCurrentPlayerIndex] = {
-            ...updated[tempCurrentPlayerIndex],
-            roll: finalRoll,
-          };
-          return updated;
-        });
-
-        setTempCurrentPlayerIndex((idx) => idx + 1);
-        
-        if (tempCurrentPlayerIndex === tempPlayersOrder.length - 1) {
-          setIsOrderComplete(true);
-        }
-        
-        setIsRolling(false);
-      }
-    }, 50);
-  };
+    rollDice();
+  }, [tempCurrentPlayerIndex, tempPlayersOrder.length, rollDice]);
 
   return (
     <div className="w-full max-w-lg mx-auto bg-white p-6 sm:p-8 rounded-xl shadow-lg">
@@ -135,7 +121,9 @@ const PlayersOrderForm = ({
                 {p.roll !== null ? (
                   <div className="flex items-center space-x-2">
                     <span className="text-2xl">🎲</span>
-                    <span className="text-xl font-bold text-green-600">{p.roll}</span>
+                    <span className="text-xl font-bold text-green-600">
+                      {p.roll}
+                    </span>
                   </div>
                 ) : (
                   <span className="text-gray-400 text-sm">Not rolled</span>
@@ -149,10 +137,10 @@ const PlayersOrderForm = ({
       <div className="flex flex-col sm:flex-row gap-3 mb-6">
         <Button
           onClick={handleRollDice}
-          disabled={isRolling || tempCurrentPlayerIndex >= tempPlayersOrder.length}
-          className={`flex-1 ${
-            isRolling ? "animate-pulse" : ""
-          }`}
+          disabled={
+            isRolling || tempCurrentPlayerIndex >= tempPlayersOrder.length
+          }
+          className={`flex-1 ${isRolling ? "animate-pulse" : ""}`}
         >
           {isRolling ? (
             <>🎲 Rolling... {diceRoll}</>
@@ -181,13 +169,17 @@ const PlayersOrderForm = ({
       <div className="mb-6">
         <div className="flex justify-between text-sm text-gray-600 mb-2">
           <span>Progress</span>
-          <span>{tempCurrentPlayerIndex}/{tempPlayersOrder.length}</span>
+          <span>
+            {tempCurrentPlayerIndex}/{tempPlayersOrder.length}
+          </span>
         </div>
         <div className="w-full bg-gray-200 rounded-full h-2">
           <div
             className="bg-indigo-500 h-2 rounded-full transition-all duration-300"
             style={{
-              width: `${(tempCurrentPlayerIndex / tempPlayersOrder.length) * 100}%`,
+              width: `${
+                (tempCurrentPlayerIndex / tempPlayersOrder.length) * 100
+              }%`,
             }}
           />
         </div>

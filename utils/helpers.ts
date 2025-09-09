@@ -34,3 +34,4 @@ export const getRoute = (color: string): BoardPosition[] => {
       return [];
   }
 };
+
